@@ -4,7 +4,7 @@ export interface Tmember {
   id: string;
   name: string;
   user: Types.ObjectId;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'others';
   dateOfBirth: string;
   email: string;
   contactNo: string;

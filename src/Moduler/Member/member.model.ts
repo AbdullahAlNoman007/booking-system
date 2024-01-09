@@ -5,7 +5,7 @@ const memberSchema = new Schema<Tmember>({
   id: { type: String, required: true },
   name: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, required: true },
-  gender: { type: String, enum: ['male', 'female'], required: true },
+  gender: { type: String, enum: ['male', 'female', 'others'], required: true },
   dateOfBirth: { type: String, required: true },
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
