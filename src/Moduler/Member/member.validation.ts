@@ -12,6 +12,7 @@ export const memberUpdateSchema = z.object({
 
 export const getValidationSchema = z.object({
   body: z.object({
-    email: z.string()
+    email: z.string().optional(),
+    contactNo: z.string().optional(),
   }),
 });

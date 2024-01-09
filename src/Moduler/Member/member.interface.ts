@@ -11,3 +11,9 @@ export interface Tmember {
   address: string;
   isDeleted: boolean;
 }
+
+export type Tget = {
+  email?: string;
+  contactNo?: string
+}
+

@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import AppError from '../../Error/AppError';
-import { Tmember } from './member.interface';
+import { Tget, Tmember } from './member.interface';
 import {
   adminModel,
   buyerModel,
@@ -12,33 +12,44 @@ const getAllBuyerFromDB = async () => {
   const result = await buyerModel.find({});
   return result;
 };
-const getABuyerFromDB = async (email: { email: string }) => {
-
-  const result = await buyerModel.findOne(email);
+const getABuyerFromDB = async (query: Tget) => {
+  if (Object.keys(query).length === 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
+  }
+  const result = await buyerModel.findOne(query);
   return result;
 };
 const getAllSellerFromDB = async () => {
   const result = await sellerModel.find({});
   return result;
 };
-const getASellerFromDB = async (email: { email: string }) => {
-  const result = await sellerModel.findOne(email);
+const getASellerFromDB = async (query: Tget) => {
+  if (Object.keys(query).length === 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
+  }
+  const result = await sellerModel.findOne(query);
   return result;
 };
 const getAllDriverFromDB = async () => {
   const result = await driverModel.find({});
   return result;
 };
-const getADriverFromDB = async (email: { email: string }) => {
-  const result = await driverModel.findOne(email);
+const getADriverFromDB = async (query: Tget) => {
+  if (Object.keys(query).length === 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
+  }
+  const result = await driverModel.findOne(query);
   return result;
 };
 const getAllAdminFromDB = async () => {
   const result = await adminModel.find({});
   return result;
 };
-const getAAdminFromDB = async (email: { email: string }) => {
-  const result = await adminModel.findOne(email);
+const getAAdminFromDB = async (query: Tget) => {
+  if (Object.keys(query).length === 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
+  }
+  const result = await adminModel.findOne(query);
   return result;
 };
 
