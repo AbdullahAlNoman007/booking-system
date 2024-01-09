@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post(
   '/create-offeredJourney',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.seller),
   validationRequest(offeredJourneyValidation.TofferedJourneyValidationSchema),
   offeredJourneyController.createOfferedJourney,
 );
@@ -21,7 +21,7 @@ router.get(
 
 router.delete(
   '/delete-offeredJourney/:id',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.seller),
   offeredJourneyController.deleteOfferedJourney,
 );
 

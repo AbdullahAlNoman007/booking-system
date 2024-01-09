@@ -13,6 +13,12 @@ router.post(
   validationRequest(bookingValidation.TbookingValidationSchema),
   bookingController.createBooking,
 );
+router.post(
+  '/create-bookingByseller',
+  auth(userRole.seller),
+  validationRequest(bookingValidation.TbookingSellerValidationSchema),
+  bookingController.createBooking,
+);
 
 router.put(
   '/update-booking/:id',

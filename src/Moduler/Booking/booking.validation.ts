@@ -24,6 +24,24 @@ const TbookingValidationSchema = z.object({
       }),
   }),
 });
+const TbookingSellerValidationSchema = z.object({
+  body: z.object({
+    journey: z.string(),
+    slot: z
+      .array(
+        z.string().refine(
+          (seat) => {
+            const regexPattern: RegExp = /^[A-Z][1-5]$/;
+            return regexPattern.test(seat);
+          },
+          {
+            message:
+              " You must give a validation string of Seat following this pattern 'A1 , A2, B3, H2' ",
+          },
+        ),
+      )
+  }),
+});
 
 const TbookingUpdateSchema = z.object({
   body: z.object({
@@ -71,4 +89,5 @@ const TbookingUpdateSchema = z.object({
 export const bookingValidation = {
   TbookingValidationSchema,
   TbookingUpdateSchema,
+  TbookingSellerValidationSchema
 };
