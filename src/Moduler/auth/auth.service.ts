@@ -8,10 +8,12 @@ import bcrypt from 'bcrypt';
 import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../middleware/sendEmail';
+import { buyerModel } from '../Member/member.model';
 
 const loginInDB = async (payload: Tlogin) => {
   const email: string = payload.email;
   const isUserExists = await UserModel.findOne({ email });
+  const userDetails = await buyerModel.findOne({ email });
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exists");
   }
@@ -39,6 +41,7 @@ const loginInDB = async (payload: Tlogin) => {
 
   const result = {
     user,
+    name: userDetails?.name,
     token,
   };
 
