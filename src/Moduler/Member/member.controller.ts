@@ -8,7 +8,7 @@ const getAllBuyer = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'All Buyers Retrieved Successfully!',
+    message: 'All Customers Retrieved Successfully!',
     data: result,
   });
 });
@@ -18,7 +18,7 @@ const getAllSeller = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'All Sellers Retrieved Successfully!',
+    message: 'All Operators Retrieved Successfully!',
     data: result,
   });
 });
@@ -48,7 +48,7 @@ const getABuyer = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Buyer Retrieved Successfully!',
+    message: 'Customer Retrieved Successfully!',
     data: result,
   });
 });
@@ -59,7 +59,7 @@ const getASeller = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Seller Retrieved Successfully!',
+    message: 'Operator Retrieved Successfully!',
     data: result,
   });
 });
@@ -90,7 +90,7 @@ const updateBuyer = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Buyer updated Successfully!',
+    message: 'Customer updated Successfully!',
     data: result,
   });
 });
@@ -101,7 +101,7 @@ const updateSeller = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Seller updated Successfully!',
+    message: 'Operator updated Successfully!',
     data: result,
   });
 });
@@ -132,7 +132,7 @@ const deleteBuyer = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Buyer Deleted Successfully!',
+    message: 'Customer Deleted Successfully!',
     data: result,
   });
 });
@@ -142,7 +142,7 @@ const deleteSeller = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Seller Deleted Successfully!',
+    message: 'Operator Deleted Successfully!',
     data: result,
   });
 });

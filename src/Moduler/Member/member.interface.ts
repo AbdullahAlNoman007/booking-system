@@ -9,6 +9,7 @@ export interface Tmember {
   email: string;
   contactNo: string;
   address: string;
+  bookedJourney?: Types.ObjectId[]
   isDeleted: boolean;
 }
 

@@ -12,7 +12,7 @@ const createBuyer = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: 'Buyer created Successfully',
+    message: 'Customer created Successfully',
     data: result,
   });
 });
@@ -23,7 +23,7 @@ const createSeller = catchAsync(async (req, res) => {
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: 'Seller created Successfully',
+    message: 'Operator created Successfully',
     data: result,
   });
 });

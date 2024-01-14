@@ -14,7 +14,7 @@ router.post(
   bookingController.createBooking,
 );
 router.post(
-  '/create-bookingByseller',
+  '/create-bookingByoperator',
   auth(userRole.seller),
   validationRequest(bookingValidation.TbookingSellerValidationSchema),
   bookingController.createBooking,

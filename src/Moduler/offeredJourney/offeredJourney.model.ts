@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TofferedJourney } from './offeredJourney.interface';
 
-const TofferedJourneySchema = new Schema({
+const TofferedJourneySchema = new Schema<TofferedJourney>({
   driver: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -23,6 +23,18 @@ const TofferedJourneySchema = new Schema({
   endTime: {
     type: String,
     required: true,
+  },
+  from: {
+    type: String,
+    required: true
+  },
+  to: {
+    type: String,
+    required: true
+  },
+  stops: {
+    type: [String],
+    required: true
   },
   capacity: {
     type: Number,

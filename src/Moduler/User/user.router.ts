@@ -8,12 +8,12 @@ import { userRole } from '../../utility/userRole';
 const router = express.Router();
 
 router.post(
-  '/create-buyer',
+  '/create-customer',
   validationRequest(MemberValidationSchema),
   userController.createBuyer,
 );
 router.post(
-  '/create-seller',
+  '/create-operator',
   auth(userRole.admin),
   validationRequest(MemberValidationSchema),
   userController.createSeller,

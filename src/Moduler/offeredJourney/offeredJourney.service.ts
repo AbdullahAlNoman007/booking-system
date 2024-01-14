@@ -3,7 +3,7 @@ import AppError from '../../Error/AppError';
 import { driverModel } from '../Member/member.model';
 import { TofferedJourney } from './offeredJourney.interface';
 import busModel from '../Bus/bus.model';
-import { offeredJourneyModel } from './offeredJourney.mode';
+import { offeredJourneyModel } from './offeredJourney.model';
 
 const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   const { driver, bus, date } = payload;

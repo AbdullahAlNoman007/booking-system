@@ -7,30 +7,32 @@ import { userRole } from '../../utility/userRole';
 
 const router = express.Router();
 
-router.get('/get-buyer', validationRequest(getValidationSchema), memberController.getABuyer);
-router.get('/get-buyers', memberController.getAllBuyer);
+router.get('/get-customer', auth(userRole.admin), validationRequest(getValidationSchema), memberController.getABuyer);
+router.get('/get-customers', auth(userRole.admin), memberController.getAllBuyer);
 router.get(
-  '/get-seller',
+  '/get-operator',
+  auth(userRole.admin),
   validationRequest(getValidationSchema),
   memberController.getASeller,
 );
-router.get('/get-sellers', memberController.getAllSeller);
+router.get('/get-operators', auth(userRole.admin), memberController.getAllSeller);
 router.get(
   '/get-driver',
+  auth(userRole.admin),
   validationRequest(getValidationSchema),
   memberController.getADriver,
 );
-router.get('/get-drivers', memberController.getAllDriver);
-router.get('/get-admin', validationRequest(getValidationSchema), memberController.getAAdmin);
-router.get('/get-admins', memberController.getAllAdmin);
+router.get('/get-drivers', auth(userRole.admin), memberController.getAllDriver);
+router.get('/get-admin', auth(userRole.admin), validationRequest(getValidationSchema), memberController.getAAdmin);
+router.get('/get-admins', auth(userRole.admin), memberController.getAllAdmin);
 router.put(
-  '/update-buyer/:id',
+  '/update-customer/:id',
   auth(userRole.admin),
   validationRequest(memberUpdateSchema),
   memberController.updateBuyer,
 );
 router.put(
-  '/update-seller/:id',
+  '/update-operator/:id',
   auth(userRole.admin),
   validationRequest(memberUpdateSchema),
   memberController.updateSeller,
@@ -48,12 +50,12 @@ router.put(
   memberController.updateAdmin,
 );
 router.delete(
-  '/delete-buyer/:id',
+  '/delete-customer/:id',
   auth(userRole.admin),
   memberController.deleteBuyer,
 );
 router.delete(
-  '/delete-seller/:id',
+  '/delete-operator/:id',
   auth(userRole.admin),
   memberController.deleteSeller,
 );

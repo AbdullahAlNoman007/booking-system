@@ -6,6 +6,9 @@ export interface TofferedJourney {
   date: string;
   startTime: string;
   endTime: string;
+  from: string,
+  to: string,
+  stops: string[]
   capacity: number;
   slot: string[];
 }

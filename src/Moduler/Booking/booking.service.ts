@@ -1,8 +1,8 @@
 import { JwtPayload } from 'jsonwebtoken';
-import { offeredJourneyModel } from '../offeredJourney/offeredJourney.mode';
+import { offeredJourneyModel } from '../offeredJourney/offeredJourney.model';
 import AppError from '../../Error/AppError';
 import httpStatus from 'http-status';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId, Types } from 'mongoose';
 import { bookingModel } from './booking.model';
 import { buyerModel } from '../Member/member.model';
 
@@ -36,7 +36,8 @@ const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
 
   const user = await buyerModel
     .findOne({ id: buyer.id })
-    .select('id name email contactNo');
+    .select('id name email contactNo bookedJourney');
+
 
   const booking = {
     userId: user?.id,
@@ -57,6 +58,8 @@ const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
     journeyDate: isJourney.date,
     startTime: isJourney.startTime,
   };
+
+  const bookedJourney = [...user?.bookedJourney as Types.ObjectId[], isJourney._id]
 
   const isBookingAlreadyExists = await bookingModel.findOne(query);
 
@@ -101,6 +104,18 @@ const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
       );
 
       if (!updateJourney) {
+        throw new AppError(
+          httpStatus.BAD_REQUEST,
+          'Failed to Update offered journey',
+        );
+      }
+
+      const updateUser = await buyerModel.findOneAndUpdate({ id: buyer.id }, {
+        bookedJourney: bookedJourney
+      }, { new: true, upsert: true, session })
+
+
+      if (!updateUser) {
         throw new AppError(
           httpStatus.BAD_REQUEST,
           'Failed to Update offered journey',

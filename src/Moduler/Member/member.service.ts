@@ -56,7 +56,7 @@ const getAAdminFromDB = async (query: Tget) => {
 const updateBuyerIntoDB = async (id: string, payload: Partial<Tmember>) => {
   const isExists = await buyerModel.findOne({ id });
   if (!isExists) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Buyer doesn't Exists!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Customer doesn't Exists!");
   }
   const result = await buyerModel.findOneAndUpdate({ id }, payload);
   return result;
@@ -64,7 +64,7 @@ const updateBuyerIntoDB = async (id: string, payload: Partial<Tmember>) => {
 const updateSellerIntoDB = async (id: string, payload: Partial<Tmember>) => {
   const isExists = await sellerModel.findOne({ id });
   if (!isExists) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Seller doesn't Exists!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
   }
   const result = await sellerModel.findOneAndUpdate({ id }, payload);
   return result;
@@ -89,7 +89,7 @@ const updateAdminIntoDB = async (id: string, payload: Partial<Tmember>) => {
 const deleteBuyerInDB = async (id: string) => {
   const isExists = await buyerModel.findOne({ id });
   if (!isExists) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Buyer doesn't Exists!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Customer doesn't Exists!");
   }
   const result = await buyerModel.findOneAndDelete({ id });
   return result;
@@ -97,7 +97,7 @@ const deleteBuyerInDB = async (id: string) => {
 const deleteSellerInDB = async (id: string) => {
   const isExists = await sellerModel.findOne({ id });
   if (!isExists) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Seller doesn't Exists!");
+    throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
   }
   const result = await sellerModel.findOneAndDelete({ id });
   return result;

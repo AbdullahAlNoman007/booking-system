@@ -10,6 +10,7 @@ const memberSchema = new Schema<Tmember>({
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
   address: { type: String, required: true },
+  bookedJourney: { type: [Schema.Types.ObjectId] },
   isDeleted: { type: Boolean, default: false },
 });
 

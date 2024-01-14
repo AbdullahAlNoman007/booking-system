@@ -5,6 +5,9 @@ const TofferedJourneyValidationSchema = z.object({
     .object({
       driver: z.string(),
       bus: z.string(),
+      from: z.string(),
+      to: z.string(),
+      stops: z.array(z.string()),
       date: z.string().refine(
         (date) => {
           const regexPattern: RegExp =
