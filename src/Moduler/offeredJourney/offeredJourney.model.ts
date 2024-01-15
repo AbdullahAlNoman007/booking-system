@@ -28,10 +28,6 @@ const TofferedJourneySchema = new Schema<TofferedJourney>({
     type: String,
     required: true
   },
-  to: {
-    type: String,
-    required: true
-  },
   stops: {
     type: [String],
     required: true

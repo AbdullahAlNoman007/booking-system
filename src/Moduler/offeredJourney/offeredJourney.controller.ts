@@ -16,16 +16,11 @@ const createOfferedJourney = catchAsync(async (req, res) => {
 });
 
 const getAllOfferedJourney = catchAsync(async (req, res) => {
-  const query = req.query;
-  const result = await offeredJourneyService.getAllOfferedJourneyFromDB(query);
+  const result = await offeredJourneyService.getAllOfferedJourneyFromDB(req.body);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Offered Journey is retrieved Successfully!',
-    meta: {
-      ...query,
-      total: result.length,
-    },
     data: result,
   });
 });

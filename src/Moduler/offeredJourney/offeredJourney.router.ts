@@ -16,6 +16,7 @@ router.post(
 
 router.get(
   '/get-offeredJourney',
+  validationRequest(offeredJourneyValidation.TofferedJourneyFindSchema),
   offeredJourneyController.getAllOfferedJourney,
 );
 

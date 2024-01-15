@@ -7,10 +7,8 @@ export const MemberValidationSchema = z.object({
     user: z.object({
       name: z.string(),
       gender: z.enum(gender),
-      dateOfBirth: z.string(),
       email: z.string().email(),
-      contactNo: z.string(),
-      address: z.string(),
+      contactNo: z.string()
     }),
   }),
 });

@@ -43,14 +43,29 @@ const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
 };
 
 const getAllOfferedJourneyFromDB = async (query: Record<string, unknown>) => {
-  const queryObj = { ...query };
 
-  const queryBuilder = await offeredJourneyModel
-    .find(queryObj)
+  if (Object.keys(query).length !== 3) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Provider your destination")
+  }
+
+  const from = query.from
+  const date = query.date
+  const stops = query.stops
+
+  console.log(stops);
+
+
+  const result = await offeredJourneyModel
+    .find({
+      from,
+      date,
+      stops: { $in: stops }
+    })
     .populate({ path: 'driver', select: 'id name email contactNo -_id' })
     .populate({ path: 'bus', select: 'companyName no capacity -_id' });
 
-  return queryBuilder;
+  return result;
+
 };
 
 const deleteOfferedJourneyFromDB = async (id: string) => {

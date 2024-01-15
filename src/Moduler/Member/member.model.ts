@@ -6,10 +6,8 @@ const memberSchema = new Schema<Tmember>({
   name: { type: String, required: true },
   user: { type: Schema.Types.ObjectId, required: true },
   gender: { type: String, enum: ['male', 'female', 'others'], required: true },
-  dateOfBirth: { type: String, required: true },
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
-  address: { type: String, required: true },
   bookedJourney: { type: [Schema.Types.ObjectId] },
   isDeleted: { type: Boolean, default: false },
 });
