@@ -9,27 +9,27 @@ const router = express.Router();
 
 router.post(
   '/create-booking',
-  auth(userRole.buyer),
+  auth(userRole.customer),
   validationRequest(bookingValidation.TbookingValidationSchema),
   bookingController.createBooking,
 );
 router.post(
   '/create-bookingByoperator',
-  auth(userRole.seller),
-  validationRequest(bookingValidation.TbookingSellerValidationSchema),
+  auth(userRole.operator),
+  validationRequest(bookingValidation.TbookingOperatorValidationSchema),
   bookingController.createBooking,
 );
 
 router.put(
   '/update-booking/:id',
-  auth(userRole.buyer),
+  auth(userRole.customer),
   validationRequest(bookingValidation.TbookingUpdateSchema),
   bookingController.updateBooking,
 );
 
 router.delete(
   '/delete-booking/:id',
-  auth(userRole.buyer),
+  auth(userRole.customer),
   bookingController.deleteBooking,
 );
 

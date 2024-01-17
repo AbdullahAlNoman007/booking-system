@@ -24,7 +24,7 @@ const TbookingValidationSchema = z.object({
       }),
   }),
 });
-const TbookingSellerValidationSchema = z.object({
+const TbookingOperatorValidationSchema = z.object({
   body: z.object({
     journey: z.string(),
     slot: z
@@ -89,5 +89,5 @@ const TbookingUpdateSchema = z.object({
 export const bookingValidation = {
   TbookingValidationSchema,
   TbookingUpdateSchema,
-  TbookingSellerValidationSchema
+  TbookingOperatorValidationSchema
 };

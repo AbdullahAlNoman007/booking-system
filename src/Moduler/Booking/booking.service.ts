@@ -4,9 +4,9 @@ import AppError from '../../Error/AppError';
 import httpStatus from 'http-status';
 import mongoose, { ObjectId, Types } from 'mongoose';
 import { bookingModel } from './booking.model';
-import { buyerModel } from '../Member/member.model';
+import { customerModel } from '../Member/member.model';
 
-const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
+const createBookingIntoDB = async (payload: any, customer: JwtPayload) => {
   const { journey, slot } = payload;
 
   const isJourney = await offeredJourneyModel
@@ -34,8 +34,8 @@ const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
     );
   }
 
-  const user = await buyerModel
-    .findOne({ id: buyer.id })
+  const user = await customerModel
+    .findOne({ id: customer.id })
     .select('id name email contactNo bookedJourney');
 
 
@@ -110,7 +110,7 @@ const createBookingIntoDB = async (payload: any, buyer: JwtPayload) => {
         );
       }
 
-      const updateUser = await buyerModel.findOneAndUpdate({ id: buyer.id }, {
+      const updateUser = await customerModel.findOneAndUpdate({ id: customer.id }, {
         bookedJourney: bookedJourney
       }, { new: true, upsert: true, session })
 
@@ -187,18 +187,18 @@ const updateBookingIntoDB = async (
   }
   const bookingSeat = await bookingModel.findById(id);
 
-  const buyerByUser = await buyerModel
+  const customerByUser = await customerModel
     .findOne({ id: bookingSeat?.userId })
     .select('id name email');
-  const buyerBytoken = await buyerModel
+  const customerBytoken = await customerModel
     .findOne({ id: user?.id })
     .select('id name email');
 
   if (
     !(
-      buyerBytoken?.id === buyerByUser?.id &&
-      buyerBytoken?.name === buyerByUser?.name &&
-      buyerBytoken?.email === buyerByUser?.email
+      customerBytoken?.id === customerByUser?.id &&
+      customerBytoken?.name === customerByUser?.name &&
+      customerBytoken?.email === customerByUser?.email
     )
   ) {
     throw new AppError(httpStatus.BAD_REQUEST, "You can't do that");
@@ -303,18 +303,18 @@ const deleteBookingFromDB = async (id: string, user: JwtPayload) => {
     throw new AppError(httpStatus.BAD_REQUEST, 'You have no booking');
   }
 
-  const buyerByUser = await buyerModel
+  const customerByUser = await customerModel
     .findOne({ id: bookingSeat?.userId })
     .select('id name email');
-  const buyerBytoken = await buyerModel
+  const customerBytoken = await customerModel
     .findOne({ id: user?.id })
     .select('id name email');
 
   if (
     !(
-      buyerBytoken?.id === buyerByUser?.id &&
-      buyerBytoken?.name === buyerByUser?.name &&
-      buyerBytoken?.email === buyerByUser?.email
+      customerBytoken?.id === customerByUser?.id &&
+      customerBytoken?.name === customerByUser?.name &&
+      customerBytoken?.email === customerByUser?.email
     )
   ) {
     throw new AppError(httpStatus.BAD_REQUEST, "You can't do that");

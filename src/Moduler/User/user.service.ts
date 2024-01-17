@@ -7,22 +7,22 @@ import AppError from '../../Error/AppError';
 import httpStatus from 'http-status';
 import {
   adminModel,
-  buyerModel,
+  customerModel,
   driverModel,
-  sellerModel,
+  operatorModel,
 } from '../Member/member.model';
 
-const createBuyerIntoDB = async (password: string, payload: Tmember) => {
+const createCustomerIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
   user.contactNo = payload.contactNo;
-  user.role = 'buyer';
+  user.role = 'customer';
 
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    user.id = (await generateId('buyer')) as string;
+    user.id = (await generateId('customer')) as string;
 
     const newUser = await UserModel.create([user], { session });
     if (!newUser.length) {
@@ -31,30 +31,30 @@ const createBuyerIntoDB = async (password: string, payload: Tmember) => {
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
 
-    const newBuyer = await buyerModel.create([payload], { session });
-    if (!newBuyer.length) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Buyer');
+    const newCustomer = await customerModel.create([payload], { session });
+    if (!newCustomer.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Customer');
     }
 
     await session.commitTransaction();
     await session.endSession();
-    return newBuyer;
+    return newCustomer;
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
     throw new Error(error);
   }
 };
-const createSellerIntoDB = async (password: string, payload: Tmember) => {
+const createOperatorIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
-  user.role = 'seller';
+  user.role = 'operator';
 
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    user.id = (await generateId('seller')) as string;
+    user.id = (await generateId('operator')) as string;
 
     const newUser = await UserModel.create([user], { session });
     if (!newUser.length) {
@@ -63,14 +63,14 @@ const createSellerIntoDB = async (password: string, payload: Tmember) => {
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
 
-    const newSeller = await sellerModel.create([payload], { session });
-    if (!newSeller.length) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Seller');
+    const newOperator = await operatorModel.create([payload], { session });
+    if (!newOperator.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create Operator');
     }
 
     await session.commitTransaction();
     await session.endSession();
-    return newSeller;
+    return newOperator;
   } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
@@ -143,8 +143,8 @@ const createAdminIntoDB = async (password: string, payload: Tmember) => {
 };
 
 export const userService = {
-  createBuyerIntoDB,
+  createCustomerIntoDB,
   createDriverIntoDB,
-  createSellerIntoDB,
+  createOperatorIntoDB,
   createAdminIntoDB,
 };

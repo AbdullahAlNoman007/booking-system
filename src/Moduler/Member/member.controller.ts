@@ -3,8 +3,8 @@ import sendRespone from '../../utility/sendResponse';
 import catchAsync from '../../utility/trycatch';
 import { memberService } from './member.service';
 
-const getAllBuyer = catchAsync(async (req, res) => {
-  const result = await memberService.getAllBuyerFromDB();
+const getAllCustomer = catchAsync(async (req, res) => {
+  const result = await memberService.getAllCustomerFromDB();
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -13,8 +13,8 @@ const getAllBuyer = catchAsync(async (req, res) => {
   });
 });
 
-const getAllSeller = catchAsync(async (req, res) => {
-  const result = await memberService.getAllSellerFromDB();
+const getAllOperator = catchAsync(async (req, res) => {
+  const result = await memberService.getAllOperatorFromDB();
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -42,9 +42,9 @@ const getAllAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const getABuyer = catchAsync(async (req, res) => {
+const getACustomer = catchAsync(async (req, res) => {
 
-  const result = await memberService.getABuyerFromDB(req.body);
+  const result = await memberService.getACustomerFromDB(req.body);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -53,9 +53,9 @@ const getABuyer = catchAsync(async (req, res) => {
   });
 });
 
-const getASeller = catchAsync(async (req, res) => {
+const getAOperator = catchAsync(async (req, res) => {
 
-  const result = await memberService.getASellerFromDB(req.body);
+  const result = await memberService.getAOperatorFromDB(req.body);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -84,9 +84,9 @@ const getAAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const updateBuyer = catchAsync(async (req, res) => {
+const updateCustomer = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await memberService.updateBuyerIntoDB(id, req.body);
+  const result = await memberService.updateCustomerIntoDB(id, req.body);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -95,9 +95,9 @@ const updateBuyer = catchAsync(async (req, res) => {
   });
 });
 
-const updateSeller = catchAsync(async (req, res) => {
+const updateOperator = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await memberService.updateSellerIntoDB(id, req.body);
+  const result = await memberService.updateOperatorIntoDB(id, req.body);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -126,9 +126,9 @@ const updateAdmin = catchAsync(async (req, res) => {
   });
 });
 
-const deleteBuyer = catchAsync(async (req, res) => {
+const deleteCustomer = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await memberService.deleteBuyerInDB(id);
+  const result = await memberService.deleteCustomerInDB(id);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -136,9 +136,9 @@ const deleteBuyer = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const deleteSeller = catchAsync(async (req, res) => {
+const deleteOperator = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await memberService.deleteSellerInDB(id);
+  const result = await memberService.deleteOperatorInDB(id);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -168,20 +168,20 @@ const deleteAdmin = catchAsync(async (req, res) => {
 });
 
 export const memberController = {
-  getABuyer,
+  getACustomer,
   getADriver,
-  getASeller,
+  getAOperator,
   getAAdmin,
-  getAllBuyer,
+  getAllCustomer,
   getAllDriver,
-  getAllSeller,
+  getAllOperator,
   getAllAdmin,
-  updateBuyer,
-  updateSeller,
+  updateCustomer,
+  updateOperator,
   updateDriver,
   updateAdmin,
-  deleteBuyer,
-  deleteSeller,
+  deleteCustomer,
+  deleteOperator,
   deleteDriver,
   deleteAdmin,
 };

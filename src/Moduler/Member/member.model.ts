@@ -12,7 +12,7 @@ const memberSchema = new Schema<Tmember>({
   isDeleted: { type: Boolean, default: false },
 });
 
-export const buyerModel = model<Tmember>('buyer', memberSchema);
-export const sellerModel = model<Tmember>('seller', memberSchema);
+export const customerModel = model<Tmember>('customer', memberSchema);
+export const operatorModel = model<Tmember>('operator', memberSchema);
 export const driverModel = model<Tmember>('driver', memberSchema);
 export const adminModel = model<Tmember>('admin', memberSchema);

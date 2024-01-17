@@ -3,7 +3,7 @@ export type Tuser = {
   email: string;
   contactNo: string;
   password: string;
-  role: 'buyer' | 'seller' | 'driver' | 'admin';
+  role: 'customer' | 'operator' | 'driver' | 'admin';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
 };

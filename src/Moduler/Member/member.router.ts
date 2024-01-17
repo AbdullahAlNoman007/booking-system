@@ -7,15 +7,15 @@ import { userRole } from '../../utility/userRole';
 
 const router = express.Router();
 
-router.get('/get-customer', auth(userRole.admin), validationRequest(getValidationSchema), memberController.getABuyer);
-router.get('/get-customers', auth(userRole.admin), memberController.getAllBuyer);
+router.get('/get-customer', auth(userRole.admin), validationRequest(getValidationSchema), memberController.getACustomer);
+router.get('/get-customers', auth(userRole.admin), memberController.getAllCustomer);
 router.get(
   '/get-operator',
   auth(userRole.admin),
   validationRequest(getValidationSchema),
-  memberController.getASeller,
+  memberController.getAOperator,
 );
-router.get('/get-operators', auth(userRole.admin), memberController.getAllSeller);
+router.get('/get-operators', auth(userRole.admin), memberController.getAllOperator);
 router.get(
   '/get-driver',
   auth(userRole.admin),
@@ -29,13 +29,13 @@ router.put(
   '/update-customer/:id',
   auth(userRole.admin),
   validationRequest(memberUpdateSchema),
-  memberController.updateBuyer,
+  memberController.updateCustomer,
 );
 router.put(
   '/update-operator/:id',
   auth(userRole.admin),
   validationRequest(memberUpdateSchema),
-  memberController.updateSeller,
+  memberController.updateOperator,
 );
 router.put(
   '/update-driver/:id',
@@ -52,12 +52,12 @@ router.put(
 router.delete(
   '/delete-customer/:id',
   auth(userRole.admin),
-  memberController.deleteBuyer,
+  memberController.deleteCustomer,
 );
 router.delete(
   '/delete-operator/:id',
   auth(userRole.admin),
-  memberController.deleteSeller,
+  memberController.deleteOperator,
 );
 router.delete(
   '/delete-driver/:id',
