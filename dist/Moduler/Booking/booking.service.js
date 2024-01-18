@@ -13,15 +13,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.bookingService = void 0;
-const offeredJourney_mode_1 = require("../offeredJourney/offeredJourney.mode");
+const offeredJourney_model_1 = require("../offeredJourney/offeredJourney.model");
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const booking_model_1 = require("./booking.model");
 const member_model_1 = require("../Member/member.model");
-const createBookingIntoDB = (payload, buyer) => __awaiter(void 0, void 0, void 0, function* () {
+const createBookingIntoDB = (payload, customer) => __awaiter(void 0, void 0, void 0, function* () {
     const { journey, slot } = payload;
-    const isJourney = yield offeredJourney_mode_1.offeredJourneyModel
+    const isJourney = yield offeredJourney_model_1.offeredJourneyModel
         .findById(journey)
         .select('capacity slot date startTime');
     if (!isJourney) {
@@ -34,9 +34,9 @@ const createBookingIntoDB = (payload, buyer) => __awaiter(void 0, void 0, void 0
     if (!allPresent) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Your select seats are already sold');
     }
-    const user = yield member_model_1.buyerModel
-        .findOne({ id: buyer.id })
-        .select('id name email contactNo');
+    const user = yield member_model_1.customerModel
+        .findOne({ id: customer.id })
+        .select('id name email contactNo bookedJourney');
     const booking = {
         userId: user === null || user === void 0 ? void 0 : user.id,
         userName: user === null || user === void 0 ? void 0 : user.name,
@@ -55,6 +55,7 @@ const createBookingIntoDB = (payload, buyer) => __awaiter(void 0, void 0, void 0
         journeyDate: isJourney.date,
         startTime: isJourney.startTime,
     };
+    const bookedJourney = [...user === null || user === void 0 ? void 0 : user.bookedJourney, isJourney._id];
     const isBookingAlreadyExists = yield booking_model_1.bookingModel.findOne(query);
     if (isBookingAlreadyExists) {
         if ((isBookingAlreadyExists === null || isBookingAlreadyExists === void 0 ? void 0 : isBookingAlreadyExists.seatNo.length) > 4) {
@@ -72,11 +73,17 @@ const createBookingIntoDB = (payload, buyer) => __awaiter(void 0, void 0, void 0
             }
             const newcapacity = isJourney.capacity - Number(slot.length);
             const filteredArray = isJourney.slot.filter((item) => !slot.includes(item));
-            const updateJourney = yield offeredJourney_mode_1.offeredJourneyModel.findByIdAndUpdate(journey, {
+            const updateJourney = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndUpdate(journey, {
                 capacity: newcapacity,
                 slot: filteredArray,
             }, { new: true, session });
             if (!updateJourney) {
+                throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to Update offered journey');
+            }
+            const updateUser = yield member_model_1.customerModel.findOneAndUpdate({ id: customer.id }, {
+                bookedJourney: bookedJourney
+            }, { new: true, upsert: true, session });
+            if (!updateUser) {
                 throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to Update offered journey');
             }
             yield session.commitTransaction();
@@ -99,7 +106,7 @@ const createBookingIntoDB = (payload, buyer) => __awaiter(void 0, void 0, void 0
             if (!newBook.length) {
                 throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create Booking');
             }
-            const updateJourney = yield offeredJourney_mode_1.offeredJourneyModel.findByIdAndUpdate(journey, {
+            const updateJourney = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndUpdate(journey, {
                 capacity: newcapacity,
                 slot: filteredArray,
             }, { new: true, session });
@@ -123,15 +130,15 @@ const updateBookingIntoDB = (id, payload, user) => __awaiter(void 0, void 0, voi
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Old seat number and New Seat Number doesn't match");
     }
     const bookingSeat = yield booking_model_1.bookingModel.findById(id);
-    const buyerByUser = yield member_model_1.buyerModel
+    const customerByUser = yield member_model_1.customerModel
         .findOne({ id: bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.userId })
         .select('id name email');
-    const buyerBytoken = yield member_model_1.buyerModel
+    const customerBytoken = yield member_model_1.customerModel
         .findOne({ id: user === null || user === void 0 ? void 0 : user.id })
         .select('id name email');
-    if (!((buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.id) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.id) &&
-        (buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.name) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.name) &&
-        (buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.email) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.email))) {
+    if (!((customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.id) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.id) &&
+        (customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.name) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.name) &&
+        (customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.email) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.email))) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You can't do that");
     }
     const isOldSeatPresent = oldSeat.some((item) => bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.seatNo.includes(item));
@@ -144,7 +151,7 @@ const updateBookingIntoDB = (id, payload, user) => __awaiter(void 0, void 0, voi
     }
     const filteredbookseat = bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.seatNo.filter((item) => !oldSeat.includes(item));
     const newSeatNo = [...filteredbookseat, ...newSeat];
-    const journey = yield offeredJourney_mode_1.offeredJourneyModel
+    const journey = yield offeredJourney_model_1.offeredJourneyModel
         .findById(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey)
         .select('slot');
     const isNewSeatAvailabe = newSeat.some((item) => journey === null || journey === void 0 ? void 0 : journey.slot.includes(item));
@@ -162,7 +169,7 @@ const updateBookingIntoDB = (id, payload, user) => __awaiter(void 0, void 0, voi
         if (!newBook) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to Update Change Seat');
         }
-        const updateJourney = yield offeredJourney_mode_1.offeredJourneyModel.findByIdAndUpdate(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey, {
+        const updateJourney = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndUpdate(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey, {
             slot: newOfferSeat,
         }, { new: true, session });
         if (!updateJourney) {
@@ -183,15 +190,15 @@ const deleteBookingFromDB = (id, user) => __awaiter(void 0, void 0, void 0, func
     if (!bookingSeat) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'You have no booking');
     }
-    const buyerByUser = yield member_model_1.buyerModel
+    const customerByUser = yield member_model_1.customerModel
         .findOne({ id: bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.userId })
         .select('id name email');
-    const buyerBytoken = yield member_model_1.buyerModel
+    const customerBytoken = yield member_model_1.customerModel
         .findOne({ id: user === null || user === void 0 ? void 0 : user.id })
         .select('id name email');
-    if (!((buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.id) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.id) &&
-        (buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.name) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.name) &&
-        (buyerBytoken === null || buyerBytoken === void 0 ? void 0 : buyerBytoken.email) === (buyerByUser === null || buyerByUser === void 0 ? void 0 : buyerByUser.email))) {
+    if (!((customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.id) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.id) &&
+        (customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.name) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.name) &&
+        (customerBytoken === null || customerBytoken === void 0 ? void 0 : customerBytoken.email) === (customerByUser === null || customerByUser === void 0 ? void 0 : customerByUser.email))) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You can't do that");
     }
     const journeyTime = new Date(`${bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journeyDate}T${bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.startTime}`);
@@ -201,7 +208,7 @@ const deleteBookingFromDB = (id, user) => __awaiter(void 0, void 0, void 0, func
     if (timeDifference < twentyFourHoursInMilliseconds) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "The difference between journey time and current time is less than 24 hours. You can't cancel your ticket at this moment");
     }
-    const offeredJourney = yield offeredJourney_mode_1.offeredJourneyModel
+    const offeredJourney = yield offeredJourney_model_1.offeredJourneyModel
         .findById(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey)
         .select('slot capacity');
     const newcapacity = (offeredJourney === null || offeredJourney === void 0 ? void 0 : offeredJourney.capacity) + Number(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.seatNo.length);
@@ -216,7 +223,7 @@ const deleteBookingFromDB = (id, user) => __awaiter(void 0, void 0, void 0, func
         if (!newBook) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to Delete Booking');
         }
-        const updateJourney = yield offeredJourney_mode_1.offeredJourneyModel.findByIdAndUpdate(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey, {
+        const updateJourney = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndUpdate(bookingSeat === null || bookingSeat === void 0 ? void 0 : bookingSeat.journey, {
             capacity: newcapacity,
             slot: newOfferSeat,
         }, { new: true, session });

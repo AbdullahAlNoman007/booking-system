@@ -19,25 +19,25 @@ const trycatch_1 = __importDefault(require("../../utility/trycatch"));
 const user_service_1 = require("./user.service");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
-const createBuyer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, user } = req.body;
     const hashPassword = yield bcrypt_1.default.hash(password, Number(config_1.default.salt_round));
-    const result = yield user_service_1.userService.createBuyerIntoDB(hashPassword, user);
+    const result = yield user_service_1.userService.createCustomerIntoDB(hashPassword, user);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
-        message: 'Buyer created Successfully',
+        message: 'Customer created Successfully',
         data: result,
     });
 }));
-const createSeller = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { password, user } = req.body;
     const hashPassword = yield bcrypt_1.default.hash(password, Number(config_1.default.salt_round));
-    const result = yield user_service_1.userService.createSellerIntoDB(hashPassword, user);
+    const result = yield user_service_1.userService.createOperatorIntoDB(hashPassword, user);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.CREATED,
-        message: 'Seller created Successfully',
+        message: 'Operator created Successfully',
         data: result,
     });
 }));
@@ -64,8 +64,8 @@ const createAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
     });
 }));
 exports.userController = {
-    createBuyer,
-    createSeller,
+    createCustomer,
+    createOperator,
     createDriver,
     createAdmin,
 };

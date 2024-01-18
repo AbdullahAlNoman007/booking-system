@@ -17,21 +17,21 @@ const http_status_1 = __importDefault(require("http-status"));
 const sendResponse_1 = __importDefault(require("../../utility/sendResponse"));
 const trycatch_1 = __importDefault(require("../../utility/trycatch"));
 const member_service_1 = require("./member.service");
-const getAllBuyer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_service_1.memberService.getAllBuyerFromDB();
+const getAllCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAllCustomerFromDB();
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'All Buyers Retrieved Successfully!',
+        message: 'All Customers Retrieved Successfully!',
         data: result,
     });
 }));
-const getAllSeller = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_service_1.memberService.getAllSellerFromDB();
+const getAllOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAllOperatorFromDB();
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'All Sellers Retrieved Successfully!',
+        message: 'All Operators Retrieved Successfully!',
         data: result,
     });
 }));
@@ -53,21 +53,21 @@ const getAllAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
-const getABuyer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_service_1.memberService.getABuyerFromDB(req.body);
+const getACustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getACustomerFromDB(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Buyer Retrieved Successfully!',
+        message: 'Customer Retrieved Successfully!',
         data: result,
     });
 }));
-const getASeller = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_service_1.memberService.getASellerFromDB(req.body);
+const getAOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAOperatorFromDB(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Seller Retrieved Successfully!',
+        message: 'Operator Retrieved Successfully!',
         data: result,
     });
 }));
@@ -89,23 +89,23 @@ const getAAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0
         data: result,
     });
 }));
-const updateBuyer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield member_service_1.memberService.updateBuyerIntoDB(id, req.body);
+    const result = yield member_service_1.memberService.updateCustomerIntoDB(id, req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Buyer updated Successfully!',
+        message: 'Customer updated Successfully!',
         data: result,
     });
 }));
-const updateSeller = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield member_service_1.memberService.updateSellerIntoDB(id, req.body);
+    const result = yield member_service_1.memberService.updateOperatorIntoDB(id, req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Seller updated Successfully!',
+        message: 'Operator updated Successfully!',
         data: result,
     });
 }));
@@ -129,23 +129,23 @@ const updateAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
-const deleteBuyer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield member_service_1.memberService.deleteBuyerInDB(id);
+    const result = yield member_service_1.memberService.deleteCustomerInDB(id);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Buyer Deleted Successfully!',
+        message: 'Customer Deleted Successfully!',
         data: result,
     });
 }));
-const deleteSeller = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield member_service_1.memberService.deleteSellerInDB(id);
+    const result = yield member_service_1.memberService.deleteOperatorInDB(id);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
-        message: 'Seller Deleted Successfully!',
+        message: 'Operator Deleted Successfully!',
         data: result,
     });
 }));
@@ -170,20 +170,20 @@ const deleteAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
     });
 }));
 exports.memberController = {
-    getABuyer,
+    getACustomer,
     getADriver,
-    getASeller,
+    getAOperator,
     getAAdmin,
-    getAllBuyer,
+    getAllCustomer,
     getAllDriver,
-    getAllSeller,
+    getAllOperator,
     getAllAdmin,
-    updateBuyer,
-    updateSeller,
+    updateCustomer,
+    updateOperator,
     updateDriver,
     updateAdmin,
-    deleteBuyer,
-    deleteSeller,
+    deleteCustomer,
+    deleteOperator,
     deleteDriver,
     deleteAdmin,
 };

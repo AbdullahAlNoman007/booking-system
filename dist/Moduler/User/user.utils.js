@@ -12,15 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const member_model_1 = require("../Member/member.model");
 const generateId = (identity) => __awaiter(void 0, void 0, void 0, function* () {
     let realId = '';
-    if (identity === 'buyer') {
-        const count = yield member_model_1.buyerModel.find({});
+    if (identity === 'customer') {
+        const count = yield member_model_1.customerModel.find({});
         const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-        realId = `B-${currentId}`;
+        realId = `C-${currentId}`;
     }
-    else if (identity === 'seller') {
-        const count = yield member_model_1.sellerModel.find({});
+    else if (identity === 'operator') {
+        const count = yield member_model_1.operatorModel.find({});
         const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-        realId = `S-${currentId}`;
+        realId = `O-${currentId}`;
     }
     else if (identity === 'driver') {
         const count = yield member_model_1.driverModel.find({});

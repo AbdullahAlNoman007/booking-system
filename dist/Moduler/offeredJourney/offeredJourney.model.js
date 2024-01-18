@@ -25,6 +25,14 @@ const TofferedJourneySchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
+    from: {
+        type: String,
+        required: true
+    },
+    stops: {
+        type: [String],
+        required: true
+    },
     capacity: {
         type: Number,
         required: true,

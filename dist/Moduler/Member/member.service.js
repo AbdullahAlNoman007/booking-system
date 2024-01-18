@@ -16,52 +16,64 @@ exports.memberService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const member_model_1 = require("./member.model");
-const getAllBuyerFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.buyerModel.find({});
+const getAllCustomerFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_model_1.customerModel.find({});
     return result;
 });
-const getABuyerFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.buyerModel.findOne(email);
+const getACustomerFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    if (Object.keys(query).length === 0) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You don't give any query,give an email or contactNo or both");
+    }
+    const result = yield member_model_1.customerModel.findOne(query);
     return result;
 });
-const getAllSellerFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.sellerModel.find({});
+const getAllOperatorFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_model_1.operatorModel.find({});
     return result;
 });
-const getASellerFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.sellerModel.findOne(email);
+const getAOperatorFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    if (Object.keys(query).length === 0) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You don't give any query,give an email or contactNo or both");
+    }
+    const result = yield member_model_1.operatorModel.findOne(query);
     return result;
 });
 const getAllDriverFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield member_model_1.driverModel.find({});
     return result;
 });
-const getADriverFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.driverModel.findOne(email);
+const getADriverFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    if (Object.keys(query).length === 0) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You don't give any query,give an email or contactNo or both");
+    }
+    const result = yield member_model_1.driverModel.findOne(query);
     return result;
 });
 const getAllAdminFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield member_model_1.adminModel.find({});
     return result;
 });
-const getAAdminFromDB = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield member_model_1.adminModel.findOne(email);
+const getAAdminFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    if (Object.keys(query).length === 0) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You don't give any query,give an email or contactNo or both");
+    }
+    const result = yield member_model_1.adminModel.findOne(query);
     return result;
 });
-const updateBuyerIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExists = yield member_model_1.buyerModel.findOne({ id });
+const updateCustomerIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExists = yield member_model_1.customerModel.findOne({ id });
     if (!isExists) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Buyer doesn't Exists!");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Customer doesn't Exists!");
     }
-    const result = yield member_model_1.buyerModel.findOneAndUpdate({ id }, payload);
+    const result = yield member_model_1.customerModel.findOneAndUpdate({ id }, payload);
     return result;
 });
-const updateSellerIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExists = yield member_model_1.sellerModel.findOne({ id });
+const updateOperatorIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExists = yield member_model_1.operatorModel.findOne({ id });
     if (!isExists) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Seller doesn't Exists!");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Operator doesn't Exists!");
     }
-    const result = yield member_model_1.sellerModel.findOneAndUpdate({ id }, payload);
+    const result = yield member_model_1.operatorModel.findOneAndUpdate({ id }, payload);
     return result;
 });
 const updateDriverIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
@@ -80,20 +92,20 @@ const updateAdminIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, fun
     const result = yield member_model_1.adminModel.findOneAndUpdate({ id }, payload);
     return result;
 });
-const deleteBuyerInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExists = yield member_model_1.buyerModel.findOne({ id });
+const deleteCustomerInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExists = yield member_model_1.customerModel.findOne({ id });
     if (!isExists) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Buyer doesn't Exists!");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Customer doesn't Exists!");
     }
-    const result = yield member_model_1.buyerModel.findOneAndDelete({ id });
+    const result = yield member_model_1.customerModel.findOneAndDelete({ id });
     return result;
 });
-const deleteSellerInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExists = yield member_model_1.sellerModel.findOne({ id });
+const deleteOperatorInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExists = yield member_model_1.operatorModel.findOne({ id });
     if (!isExists) {
-        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Seller doesn't Exists!");
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Operator doesn't Exists!");
     }
-    const result = yield member_model_1.sellerModel.findOneAndDelete({ id });
+    const result = yield member_model_1.operatorModel.findOneAndDelete({ id });
     return result;
 });
 const deleteDriverInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
@@ -113,17 +125,17 @@ const deleteAdminInDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return result;
 });
 exports.memberService = {
-    getABuyerFromDB,
+    getACustomerFromDB,
     getADriverFromDB,
-    getASellerFromDB,
-    getAllBuyerFromDB,
+    getAOperatorFromDB,
+    getAllCustomerFromDB,
     getAllDriverFromDB,
-    getAllSellerFromDB,
-    updateBuyerIntoDB,
-    updateSellerIntoDB,
+    getAllOperatorFromDB,
+    updateCustomerIntoDB,
+    updateOperatorIntoDB,
     updateDriverIntoDB,
-    deleteBuyerInDB,
-    deleteSellerInDB,
+    deleteCustomerInDB,
+    deleteOperatorInDB,
     deleteDriverInDB,
     getAAdminFromDB,
     getAllAdminFromDB,

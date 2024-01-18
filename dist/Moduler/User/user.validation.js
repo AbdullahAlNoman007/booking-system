@@ -9,10 +9,8 @@ exports.MemberValidationSchema = zod_1.z.object({
         user: zod_1.z.object({
             name: zod_1.z.string(),
             gender: zod_1.z.enum(gender),
-            dateOfBirth: zod_1.z.string(),
             email: zod_1.z.string().email(),
-            contactNo: zod_1.z.string(),
-            address: zod_1.z.string(),
+            contactNo: zod_1.z.string()
         }),
     }),
 });

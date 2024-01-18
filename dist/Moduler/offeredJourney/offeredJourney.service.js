@@ -17,7 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const member_model_1 = require("../Member/member.model");
 const bus_model_1 = __importDefault(require("../Bus/bus.model"));
-const offeredJourney_mode_1 = require("./offeredJourney.mode");
+const offeredJourney_model_1 = require("./offeredJourney.model");
 const createOfferedJourneyIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { driver, bus, date } = payload;
     const isDriverExists = yield member_model_1.driverModel.findById(driver);
@@ -30,30 +30,40 @@ const createOfferedJourneyIntoDB = (payload) => __awaiter(void 0, void 0, void 0
     }
     payload.capacity = isBusExists.capacity;
     payload.slot = isBusExists.slot;
-    const isBusAndDateConflict = yield offeredJourney_mode_1.offeredJourneyModel.findOne({ bus, date });
+    const isBusAndDateConflict = yield offeredJourney_model_1.offeredJourneyModel.findOne({ bus, date });
     if (isBusAndDateConflict) {
         throw new AppError_1.default(http_status_1.default.CONFLICT, 'This Bus has trip on this date');
     }
-    const isDriverAndDateConflict = yield offeredJourney_mode_1.offeredJourneyModel.findOne({
+    const isDriverAndDateConflict = yield offeredJourney_model_1.offeredJourneyModel.findOne({
         driver,
         date,
     });
     if (isDriverAndDateConflict) {
         throw new AppError_1.default(http_status_1.default.CONFLICT, 'This Driver has trip on this date');
     }
-    const result = yield offeredJourney_mode_1.offeredJourneyModel.create(payload);
+    const result = yield offeredJourney_model_1.offeredJourneyModel.create(payload);
     return result;
 });
 const getAllOfferedJourneyFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const queryObj = Object.assign({}, query);
-    const queryBuilder = yield offeredJourney_mode_1.offeredJourneyModel
-        .find(queryObj)
+    if (Object.keys(query).length !== 3) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Provider your destination");
+    }
+    const from = query.from;
+    const date = query.date;
+    const stops = query.stops;
+    console.log(stops);
+    const result = yield offeredJourney_model_1.offeredJourneyModel
+        .find({
+        from,
+        date,
+        stops: { $in: stops }
+    })
         .populate({ path: 'driver', select: 'id name email contactNo -_id' })
         .populate({ path: 'bus', select: 'companyName no capacity -_id' });
-    return queryBuilder;
+    return result;
 });
 const deleteOfferedJourneyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield offeredJourney_mode_1.offeredJourneyModel.findByIdAndDelete(id);
+    const result = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndDelete(id);
     return result;
 });
 exports.offeredJourneyService = {

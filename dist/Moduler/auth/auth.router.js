@@ -12,7 +12,7 @@ const auth_1 = __importDefault(require("../../middleware/auth"));
 const userRole_1 = require("../../utility/userRole");
 const router = express_1.default.Router();
 router.post('/login', (0, validationRequest_1.default)(auth_validation_1.authValidation.logInvalidationSchema), auth_controller_1.authController.login);
-router.post('/change-password', (0, auth_1.default)(userRole_1.userRole.admin, userRole_1.userRole.buyer, userRole_1.userRole.driver, userRole_1.userRole.seller), (0, validationRequest_1.default)(auth_validation_1.authValidation.changePasswordValidationSchema), auth_controller_1.authController.changePassword);
+router.post('/change-password', (0, auth_1.default)(userRole_1.userRole.admin, userRole_1.userRole.customer, userRole_1.userRole.driver, userRole_1.userRole.operator), (0, validationRequest_1.default)(auth_validation_1.authValidation.changePasswordValidationSchema), auth_controller_1.authController.changePassword);
 router.post('/forget-password', (0, validationRequest_1.default)(auth_validation_1.authValidation.forgetpasswordValidationSchema), auth_controller_1.authController.forgetPassword);
 router.post('/reset-password', (0, validationRequest_1.default)(auth_validation_1.authValidation.resetpasswordValidationSchema), auth_controller_1.authController.resetPassword);
 exports.authRouter = router;

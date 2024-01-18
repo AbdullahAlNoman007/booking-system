@@ -20,6 +20,18 @@ const TbookingValidationSchema = zod_1.z.object({
         }),
     }),
 });
+const TbookingOperatorValidationSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        journey: zod_1.z.string(),
+        slot: zod_1.z
+            .array(zod_1.z.string().refine((seat) => {
+            const regexPattern = /^[A-Z][1-5]$/;
+            return regexPattern.test(seat);
+        }, {
+            message: " You must give a validation string of Seat following this pattern 'A1 , A2, B3, H2' ",
+        }))
+    }),
+});
 const TbookingUpdateSchema = zod_1.z.object({
     body: zod_1.z.object({
         oldSeat: zod_1.z
@@ -53,4 +65,5 @@ const TbookingUpdateSchema = zod_1.z.object({
 exports.bookingValidation = {
     TbookingValidationSchema,
     TbookingUpdateSchema,
+    TbookingOperatorValidationSchema
 };

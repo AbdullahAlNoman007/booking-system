@@ -8,7 +8,7 @@ const userSchema = new Schema<Tuser>({
   password: { type: String, required: true },
   role: {
     type: String,
-    enum: ['buyer', 'seller', 'driver', 'admin'],
+    enum: ['customer', 'operator', 'driver', 'admin'],
   },
   status: {
     type: String,

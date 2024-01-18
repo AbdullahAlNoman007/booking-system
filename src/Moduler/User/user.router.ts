@@ -10,13 +10,13 @@ const router = express.Router();
 router.post(
   '/create-customer',
   validationRequest(MemberValidationSchema),
-  userController.createBuyer,
+  userController.createCustomer,
 );
 router.post(
   '/create-operator',
   auth(userRole.admin),
   validationRequest(MemberValidationSchema),
-  userController.createSeller,
+  userController.createOperator,
 );
 router.post(
   '/create-driver',

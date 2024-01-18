@@ -3,31 +3,31 @@ import AppError from '../../Error/AppError';
 import { Tget, Tmember } from './member.interface';
 import {
   adminModel,
-  buyerModel,
+  customerModel,
   driverModel,
-  sellerModel,
+  operatorModel,
 } from './member.model';
 
-const getAllBuyerFromDB = async () => {
-  const result = await buyerModel.find({});
+const getAllCustomerFromDB = async () => {
+  const result = await customerModel.find({});
   return result;
 };
-const getABuyerFromDB = async (query: Tget) => {
+const getACustomerFromDB = async (query: Tget) => {
   if (Object.keys(query).length === 0) {
     throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
   }
-  const result = await buyerModel.findOne(query);
+  const result = await customerModel.findOne(query);
   return result;
 };
-const getAllSellerFromDB = async () => {
-  const result = await sellerModel.find({});
+const getAllOperatorFromDB = async () => {
+  const result = await operatorModel.find({});
   return result;
 };
-const getASellerFromDB = async (query: Tget) => {
+const getAOperatorFromDB = async (query: Tget) => {
   if (Object.keys(query).length === 0) {
     throw new AppError(httpStatus.BAD_REQUEST, "You don't give any query,give an email or contactNo or both")
   }
-  const result = await sellerModel.findOne(query);
+  const result = await operatorModel.findOne(query);
   return result;
 };
 const getAllDriverFromDB = async () => {
@@ -53,20 +53,20 @@ const getAAdminFromDB = async (query: Tget) => {
   return result;
 };
 
-const updateBuyerIntoDB = async (id: string, payload: Partial<Tmember>) => {
-  const isExists = await buyerModel.findOne({ id });
+const updateCustomerIntoDB = async (id: string, payload: Partial<Tmember>) => {
+  const isExists = await customerModel.findOne({ id });
   if (!isExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Customer doesn't Exists!");
   }
-  const result = await buyerModel.findOneAndUpdate({ id }, payload);
+  const result = await customerModel.findOneAndUpdate({ id }, payload);
   return result;
 };
-const updateSellerIntoDB = async (id: string, payload: Partial<Tmember>) => {
-  const isExists = await sellerModel.findOne({ id });
+const updateOperatorIntoDB = async (id: string, payload: Partial<Tmember>) => {
+  const isExists = await operatorModel.findOne({ id });
   if (!isExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
   }
-  const result = await sellerModel.findOneAndUpdate({ id }, payload);
+  const result = await operatorModel.findOneAndUpdate({ id }, payload);
   return result;
 };
 const updateDriverIntoDB = async (id: string, payload: Partial<Tmember>) => {
@@ -86,20 +86,20 @@ const updateAdminIntoDB = async (id: string, payload: Partial<Tmember>) => {
   return result;
 };
 
-const deleteBuyerInDB = async (id: string) => {
-  const isExists = await buyerModel.findOne({ id });
+const deleteCustomerInDB = async (id: string) => {
+  const isExists = await customerModel.findOne({ id });
   if (!isExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Customer doesn't Exists!");
   }
-  const result = await buyerModel.findOneAndDelete({ id });
+  const result = await customerModel.findOneAndDelete({ id });
   return result;
 };
-const deleteSellerInDB = async (id: string) => {
-  const isExists = await sellerModel.findOne({ id });
+const deleteOperatorInDB = async (id: string) => {
+  const isExists = await operatorModel.findOne({ id });
   if (!isExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
   }
-  const result = await sellerModel.findOneAndDelete({ id });
+  const result = await operatorModel.findOneAndDelete({ id });
   return result;
 };
 const deleteDriverInDB = async (id: string) => {
@@ -120,17 +120,17 @@ const deleteAdminInDB = async (id: string) => {
 };
 
 export const memberService = {
-  getABuyerFromDB,
+  getACustomerFromDB,
   getADriverFromDB,
-  getASellerFromDB,
-  getAllBuyerFromDB,
+  getAOperatorFromDB,
+  getAllCustomerFromDB,
   getAllDriverFromDB,
-  getAllSellerFromDB,
-  updateBuyerIntoDB,
-  updateSellerIntoDB,
+  getAllOperatorFromDB,
+  updateCustomerIntoDB,
+  updateOperatorIntoDB,
   updateDriverIntoDB,
-  deleteBuyerInDB,
-  deleteSellerInDB,
+  deleteCustomerInDB,
+  deleteOperatorInDB,
   deleteDriverInDB,
   getAAdminFromDB,
   getAllAdminFromDB,

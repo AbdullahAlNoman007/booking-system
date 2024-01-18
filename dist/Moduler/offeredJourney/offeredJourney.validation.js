@@ -7,6 +7,9 @@ const TofferedJourneyValidationSchema = zod_1.z.object({
         .object({
         driver: zod_1.z.string(),
         bus: zod_1.z.string(),
+        from: zod_1.z.string(),
+        to: zod_1.z.string(),
+        stops: zod_1.z.array(zod_1.z.string()),
         date: zod_1.z.string().refine((date) => {
             const regexPattern = /^(?:20\d\d)-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$/;
             return regexPattern.test(date);
@@ -34,4 +37,17 @@ const TofferedJourneyValidationSchema = zod_1.z.object({
         message: 'End time must be after Start time!',
     }),
 });
-exports.offeredJourneyValidation = { TofferedJourneyValidationSchema };
+const TofferedJourneyFindSchema = zod_1.z.object({
+    body: zod_1.z
+        .object({
+        from: zod_1.z.string(),
+        stops: zod_1.z.array(zod_1.z.string()),
+        date: zod_1.z.string().refine((date) => {
+            const regexPattern = /^(?:20\d\d)-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$/;
+            return regexPattern.test(date);
+        }, {
+            message: " You must give a validation string of Date following this pattern 'YYYY:MM:DD' ",
+        })
+    }),
+});
+exports.offeredJourneyValidation = { TofferedJourneyValidationSchema, TofferedJourneyFindSchema };

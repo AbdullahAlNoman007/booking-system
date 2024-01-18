@@ -19,29 +19,29 @@ const user_model_1 = require("./user.model");
 const AppError_1 = __importDefault(require("../../Error/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
 const member_model_1 = require("../Member/member.model");
-const createBuyerIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createCustomerIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = {};
     user.password = password;
     user.email = payload.email;
     user.contactNo = payload.contactNo;
-    user.role = 'buyer';
+    user.role = 'customer';
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
-        user.id = (yield (0, user_utils_1.default)('buyer'));
+        user.id = (yield (0, user_utils_1.default)('customer'));
         const newUser = yield user_model_1.UserModel.create([user], { session });
         if (!newUser.length) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
         }
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
-        const newBuyer = yield member_model_1.buyerModel.create([payload], { session });
-        if (!newBuyer.length) {
-            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create Buyer');
+        const newCustomer = yield member_model_1.customerModel.create([payload], { session });
+        if (!newCustomer.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create Customer');
         }
         yield session.commitTransaction();
         yield session.endSession();
-        return newBuyer;
+        return newCustomer;
     }
     catch (error) {
         yield session.abortTransaction();
@@ -49,28 +49,28 @@ const createBuyerIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         throw new Error(error);
     }
 });
-const createSellerIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createOperatorIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const user = {};
     user.password = password;
     user.email = payload.email;
-    user.role = 'seller';
+    user.role = 'operator';
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
-        user.id = (yield (0, user_utils_1.default)('seller'));
+        user.id = (yield (0, user_utils_1.default)('operator'));
         const newUser = yield user_model_1.UserModel.create([user], { session });
         if (!newUser.length) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
         }
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
-        const newSeller = yield member_model_1.sellerModel.create([payload], { session });
-        if (!newSeller.length) {
-            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create Seller');
+        const newOperator = yield member_model_1.operatorModel.create([payload], { session });
+        if (!newOperator.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create Operator');
         }
         yield session.commitTransaction();
         yield session.endSession();
-        return newSeller;
+        return newOperator;
     }
     catch (error) {
         yield session.abortTransaction();
@@ -137,8 +137,8 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
     }
 });
 exports.userService = {
-    createBuyerIntoDB,
+    createCustomerIntoDB,
     createDriverIntoDB,
-    createSellerIntoDB,
+    createOperatorIntoDB,
     createAdminIntoDB,
 };

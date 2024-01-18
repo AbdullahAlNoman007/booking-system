@@ -5,10 +5,10 @@ import { userService } from './user.service';
 import bcrypt from 'bcrypt';
 import config from '../../config';
 
-const createBuyer = catchAsync(async (req, res) => {
+const createCustomer = catchAsync(async (req, res) => {
   const { password, user } = req.body;
   const hashPassword = await bcrypt.hash(password, Number(config.salt_round));
-  const result = await userService.createBuyerIntoDB(hashPassword, user);
+  const result = await userService.createCustomerIntoDB(hashPassword, user);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -16,10 +16,10 @@ const createBuyer = catchAsync(async (req, res) => {
     data: result,
   });
 });
-const createSeller = catchAsync(async (req, res) => {
+const createOperator = catchAsync(async (req, res) => {
   const { password, user } = req.body;
   const hashPassword = await bcrypt.hash(password, Number(config.salt_round));
-  const result = await userService.createSellerIntoDB(hashPassword, user);
+  const result = await userService.createOperatorIntoDB(hashPassword, user);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.CREATED,
@@ -51,8 +51,8 @@ const createAdmin = catchAsync(async (req, res) => {
 });
 
 export const userController = {
-  createBuyer,
-  createSeller,
+  createCustomer,
+  createOperator,
   createDriver,
   createAdmin,
 };

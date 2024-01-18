@@ -27,13 +27,11 @@ const createOfferedJourney = (0, trycatch_1.default)((req, res) => __awaiter(voi
     });
 }));
 const getAllOfferedJourney = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = req.query;
-    const result = yield offeredJourney_service_1.offeredJourneyService.getAllOfferedJourneyFromDB(query);
+    const result = yield offeredJourney_service_1.offeredJourneyService.getAllOfferedJourneyFromDB(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
         message: 'Offered Journey is retrieved Successfully!',
-        meta: Object.assign(Object.assign({}, query), { total: result.length }),
         data: result,
     });
 }));

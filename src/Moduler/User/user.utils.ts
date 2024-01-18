@@ -1,22 +1,22 @@
 import {
   adminModel,
-  buyerModel,
+  customerModel,
   driverModel,
-  sellerModel,
+  operatorModel,
 } from '../Member/member.model';
 
-type Tidentity = 'buyer' | 'seller' | 'driver' | 'admin';
+type Tidentity = 'customer' | 'operator' | 'driver' | 'admin';
 
 const generateId = async (identity: Tidentity) => {
   let realId: string = '';
-  if (identity === 'buyer') {
-    const count = await buyerModel.find({});
+  if (identity === 'customer') {
+    const count = await customerModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-    realId = `B-${currentId}`;
-  } else if (identity === 'seller') {
-    const count = await sellerModel.find({});
+    realId = `C-${currentId}`;
+  } else if (identity === 'operator') {
+    const count = await operatorModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-    realId = `S-${currentId}`;
+    realId = `O-${currentId}`;
   } else if (identity === 'driver') {
     const count = await driverModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');

@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../middleware/sendEmail';
-import { adminModel, buyerModel, driverModel, sellerModel } from '../Member/member.model';
+import { adminModel, customerModel, driverModel, operatorModel } from '../Member/member.model';
 
 const loginInDB = async (payload: Tlogin) => {
   const email: string = payload.email;
@@ -17,11 +17,11 @@ const loginInDB = async (payload: Tlogin) => {
   if (isUserExists?.role === 'admin') {
     userDetails = await adminModel.findOne({ email }).select('name -_id')
   }
-  else if (isUserExists?.role === 'buyer') {
-    userDetails = await buyerModel.findOne({ email }).select('name -_id')
+  else if (isUserExists?.role === 'customer') {
+    userDetails = await customerModel.findOne({ email }).select('name -_id')
   }
-  else if (isUserExists?.role === 'seller') {
-    userDetails = await sellerModel.findOne({ email }).select('name -_id')
+  else if (isUserExists?.role === 'operator') {
+    userDetails = await operatorModel.findOne({ email }).select('name -_id')
   }
   else if (isUserExists?.role === 'driver') {
     userDetails = await driverModel.findOne({ email }).select('name -id')
@@ -52,8 +52,8 @@ const loginInDB = async (payload: Tlogin) => {
   const user = { ...jwtPayload, name: userDetails?.name };
 
   const result = {
-    user,
-    token,
+    ...user,
+    token: token,
   };
 
   return result;
