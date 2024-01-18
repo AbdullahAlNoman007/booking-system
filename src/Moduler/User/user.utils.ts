@@ -12,11 +12,11 @@ const generateId = async (identity: Tidentity) => {
   if (identity === 'customer') {
     const count = await customerModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-    realId = `B-${currentId}`;
+    realId = `C-${currentId}`;
   } else if (identity === 'operator') {
     const count = await operatorModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
-    realId = `S-${currentId}`;
+    realId = `O-${currentId}`;
   } else if (identity === 'driver') {
     const count = await driverModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
