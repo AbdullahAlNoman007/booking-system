@@ -5,6 +5,7 @@ const TbusValidationSchema = z.object({
     companyName: z.string(),
     no: z.string(),
     capacity: z.number(),
+    category: z.enum(['AC', 'Non-AC']),
     slot: z.array(
       z.string().refine(
         (seat) => {

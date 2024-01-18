@@ -1,9 +1,10 @@
 import httpStatus from 'http-status';
 import AppError from '../../Error/AppError';
-import { driverModel } from '../Member/member.model';
+import { driverModel, operatorModel } from '../Member/member.model';
 import { TofferedJourney } from './offeredJourney.interface';
 import busModel from '../Bus/bus.model';
 import { offeredJourneyModel } from './offeredJourney.model';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   const { driver, bus, date } = payload;
@@ -19,6 +20,7 @@ const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   }
 
   payload.capacity = isBusExists.capacity;
+  payload.category = isBusExists.category;
   payload.slot = isBusExists.slot;
 
   const isBusAndDateConflict = await offeredJourneyModel.findOne({ bus, date });
@@ -52,9 +54,6 @@ const getAllOfferedJourneyFromDB = async (query: Record<string, unknown>) => {
   const date = query.date
   const stops = query.stops
 
-  console.log(stops);
-
-
   const result = await offeredJourneyModel
     .find({
       from,
@@ -68,6 +67,21 @@ const getAllOfferedJourneyFromDB = async (query: Record<string, unknown>) => {
 
 };
 
+const getAllOfferedJourneyFromDBByOperator = async (payload: JwtPayload) => {
+  const seller = await operatorModel.findOne({ id: payload.id })
+  const from = seller?.from;
+  const to = seller?.to
+  const result = await offeredJourneyModel
+    .find({
+      from,
+      to,
+    })
+    .populate({ path: 'driver', select: 'id name email contactNo -_id' })
+    .populate({ path: 'bus', select: 'companyName no capacity -_id' });
+
+  return result
+}
+
 const deleteOfferedJourneyFromDB = async (id: string) => {
   const result = await offeredJourneyModel.findByIdAndDelete(id);
   return result;
@@ -77,4 +91,5 @@ export const offeredJourneyService = {
   createOfferedJourneyIntoDB,
   getAllOfferedJourneyFromDB,
   deleteOfferedJourneyFromDB,
+  getAllOfferedJourneyFromDBByOperator
 };

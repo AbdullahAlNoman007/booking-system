@@ -8,6 +8,8 @@ const memberSchema = new Schema<Tmember>({
   gender: { type: String, enum: ['male', 'female', 'others'], required: true },
   email: { type: String, required: true },
   contactNo: { type: String, required: true },
+  from: { type: String },
+  to: { type: String },
   bookedJourney: { type: [Schema.Types.ObjectId] },
   isDeleted: { type: Boolean, default: false },
 });

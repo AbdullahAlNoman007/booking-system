@@ -37,8 +37,18 @@ const deleteOfferedJourney = catchAsync(async (req, res) => {
   });
 });
 
+const getAllOfferedJourneyByOperator = catchAsync(async (req, res) => {
+  const result = await offeredJourneyService.getAllOfferedJourneyFromDBByOperator(req.user)
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Offered Journey is retrieved Successfully!',
+    data: result,
+  });
+});
 export const offeredJourneyController = {
   createOfferedJourney,
   getAllOfferedJourney,
   deleteOfferedJourney,
+  getAllOfferedJourneyByOperator
 };

@@ -1,7 +1,7 @@
 import express from 'express';
 import { userController } from './user.controller';
 import validationRequest from '../../middleware/validationRequest';
-import { MemberValidationSchema } from './user.validation';
+import { MemberValidationSchema, operatorValidationSchema } from './user.validation';
 import auth from '../../middleware/auth';
 import { userRole } from '../../utility/userRole';
 
@@ -15,7 +15,7 @@ router.post(
 router.post(
   '/create-operator',
   auth(userRole.admin),
-  validationRequest(MemberValidationSchema),
+  validationRequest(operatorValidationSchema),
   userController.createOperator,
 );
 router.post(

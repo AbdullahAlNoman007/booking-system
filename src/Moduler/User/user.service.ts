@@ -49,7 +49,9 @@ const createOperatorIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
+  user.contactNo = payload.contactNo;
   user.role = 'operator';
+
 
   const session = await mongoose.startSession();
   try {

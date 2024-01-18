@@ -7,6 +7,8 @@ export interface Tmember {
   gender: 'male' | 'female' | 'others';
   email: string;
   contactNo: string;
+  from?: string;
+  to: string;
   bookedJourney?: Types.ObjectId[]
   isDeleted: boolean;
 }

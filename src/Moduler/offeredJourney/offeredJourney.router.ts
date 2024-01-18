@@ -19,6 +19,11 @@ router.get(
   validationRequest(offeredJourneyValidation.TofferedJourneyFindSchema),
   offeredJourneyController.getAllOfferedJourney,
 );
+router.get(
+  '/get-offeredJourneyByOperator',
+  auth(userRole.operator),
+  offeredJourneyController.getAllOfferedJourneyByOperator,
+);
 
 router.delete(
   '/delete-offeredJourney/:id',

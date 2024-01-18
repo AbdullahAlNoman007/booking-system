@@ -13,18 +13,18 @@ import { adminModel, customerModel, driverModel, operatorModel } from '../Member
 const loginInDB = async (payload: Tlogin) => {
   const email: string = payload.email;
   const isUserExists = await UserModel.findOne({ email });
-  let userDetails: { name: string } = { name: '' };
+  let userDetails: { name: string, contactNo: string } = { name: '', contactNo: '' };
   if (isUserExists?.role === 'admin') {
-    userDetails = await adminModel.findOne({ email }).select('name -_id')
+    userDetails = await adminModel.findOne({ email }).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'customer') {
-    userDetails = await customerModel.findOne({ email }).select('name -_id')
+    userDetails = await customerModel.findOne({ email }).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'operator') {
-    userDetails = await operatorModel.findOne({ email }).select('name -_id')
+    userDetails = await operatorModel.findOne({ email }).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'driver') {
-    userDetails = await driverModel.findOne({ email }).select('name -id')
+    userDetails = await driverModel.findOne({ email }).select('name contactNo -id')
   }
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exists");
@@ -48,8 +48,10 @@ const loginInDB = async (payload: Tlogin) => {
   if (!isPasswordMatch) {
     throw new AppError(httpStatus.BAD_REQUEST, "Password doesn't Match");
   }
+  console.log(isUserExists);
 
-  const user = { ...jwtPayload, name: userDetails?.name };
+
+  const user = { ...jwtPayload, contactNo: userDetails?.contactNo, name: userDetails?.name };
 
   const result = {
     ...user,
