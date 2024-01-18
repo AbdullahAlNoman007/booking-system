@@ -49,6 +49,7 @@ const createSellerIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
+  user.contactNo = payload.contactNo;
   user.role = 'seller';
 
   const session = await mongoose.startSession();
@@ -81,6 +82,7 @@ const createDriverIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
+  user.contactNo = payload.contactNo;
   user.role = 'driver';
 
   const session = await mongoose.startSession();
@@ -113,6 +115,7 @@ const createAdminIntoDB = async (password: string, payload: Tmember) => {
   const user: Partial<Tuser> = {};
   user.password = password;
   user.email = payload.email;
+  user.contactNo = payload.contactNo;
   user.role = 'admin';
 
   const session = await mongoose.startSession();
