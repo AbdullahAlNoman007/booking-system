@@ -12,7 +12,7 @@ const TofferedJourneySchema = new Schema<TofferedJourney>({
     required: true,
     ref: 'bus',
   },
-  category: { type: String, enum: ['AC', 'Non-AC'], required: true },
+  category: { type: String, enum: ['AC', 'Non-AC'], required: true, default: "Non-AC" },
   date: {
     type: String,
     required: true,

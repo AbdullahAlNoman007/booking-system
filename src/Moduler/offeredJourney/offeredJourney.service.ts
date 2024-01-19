@@ -5,6 +5,7 @@ import { TofferedJourney } from './offeredJourney.interface';
 import busModel from '../Bus/bus.model';
 import { offeredJourneyModel } from './offeredJourney.model';
 import { JwtPayload } from 'jsonwebtoken';
+import { any } from 'zod';
 
 const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   const { driver, bus, date } = payload;
@@ -44,15 +45,15 @@ const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   return result;
 };
 
-const getAllOfferedJourneyFromDB = async (query: Record<string, unknown>) => {
+const getAllOfferedJourneyFromDB = async (query: { date: string; startTime: string; from: string; stops: string[]; }) => {
 
-  if (Object.keys(query).length !== 3) {
+  if (Object.keys(query).length < 3) {
     throw new AppError(httpStatus.BAD_REQUEST, "Provider your destination")
   }
 
-  const from = query.from
-  const date = query.date
-  const stops = query.stops
+  const from = new RegExp(query?.from, 'i');
+  const date = query.date;
+  const stops = query?.stops.map((stop: any) => new RegExp(stop, 'i'));
 
   const result = await offeredJourneyModel
     .find({
