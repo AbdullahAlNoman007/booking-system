@@ -1,5 +1,10 @@
 import { Types } from 'mongoose';
 
+interface route {
+  from: string;
+  to: string;
+}
+
 export interface Tmember {
   id: string;
   name: string;
@@ -17,10 +22,7 @@ export interface Toperator {
   gender: 'male' | 'female' | 'others';
   email: string;
   contactNo: string;
-  from: string[];
-  to: string[];
-  bookedJourney?: Types.ObjectId[]
-  isDeleted: boolean;
+  route: route[];
 }
 
 export type Tget = {

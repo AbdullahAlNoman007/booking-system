@@ -5,7 +5,6 @@ import { TofferedJourney } from './offeredJourney.interface';
 import busModel from '../Bus/bus.model';
 import { offeredJourneyModel } from './offeredJourney.model';
 import { JwtPayload } from 'jsonwebtoken';
-import { any } from 'zod';
 
 const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   const { driver, bus, date } = payload;
@@ -69,18 +68,22 @@ const getAllOfferedJourneyFromDB = async (query: { date: string; startTime: stri
 };
 
 const getAllOfferedJourneyFromDBByOperator = async (payload: JwtPayload) => {
-  const seller = await operatorModel.findOne({ id: payload.id })
-  const from = seller?.from;
-  const to = seller?.to
-  const result = await offeredJourneyModel
-    .find({
-      from,
-      to,
-    })
-    .populate({ path: 'driver', select: 'id name email contactNo -_id' })
-    .populate({ path: 'bus', select: 'companyName no capacity -_id' });
+  const seller = await operatorModel.findOne({ id: payload.id }).select('route.from route.to -_id');
+  const routes = seller?.route;
+  let result: any = [];
 
-  return result
+  if (routes) {
+    // Use Promise.all to wait for all async operations to complete
+    await Promise.all(
+      routes.map(async (route) => {
+        const fetchValue = await offeredJourneyModel.find(route);
+        result = [...result, ...fetchValue];
+      })
+    );
+  }
+
+  return (result);
+
 }
 
 const deleteOfferedJourneyFromDB = async (id: string) => {
