@@ -29,6 +29,10 @@ const TofferedJourneySchema = new Schema<TofferedJourney>({
     type: String,
     required: true
   },
+  price: {
+    type: Number,
+    required: true
+  },
   to: {
     type: String,
     required: true

@@ -5,6 +5,9 @@ import { TofferedJourney } from './offeredJourney.interface';
 import busModel from '../Bus/bus.model';
 import { offeredJourneyModel } from './offeredJourney.model';
 import { JwtPayload } from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import { routesModel } from '../routes/routes.model';
+import config from '../../config';
 
 const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
   const { driver, bus, date } = payload;
@@ -39,9 +42,36 @@ const createOfferedJourneyIntoDB = async (payload: TofferedJourney) => {
     );
   }
 
-  const result = await offeredJourneyModel.create(payload);
+  const session = await mongoose.startSession()
+  try {
+    session.startTransaction()
 
-  return result;
+    const presentroutes = await routesModel.findById(config.routes_id)
+    let routes = presentroutes?.routes
+    routes = [...routes as string[], payload.from, ...payload.stops]
+
+    const updateRoutes = [...new Set(routes)]
+
+    const update = await routesModel.findByIdAndUpdate(config.routes_id, { routes: updateRoutes }, { new: true, upsert: true, session })
+
+    if (!update) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Routes don't updates")
+    }
+
+    const result = await offeredJourneyModel.create([payload], { session });
+
+    if (!result) {
+      throw new AppError(httpStatus.BAD_REQUEST, "Offered Journey's creation is failed")
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+    return result;
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
 };
 
 const getAllOfferedJourneyFromDB = async (query: { date: string; startTime: string; from: string; stops: string[]; }) => {

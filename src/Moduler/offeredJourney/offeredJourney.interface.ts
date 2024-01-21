@@ -8,6 +8,7 @@ export interface TofferedJourney {
   startTime: string;
   endTime: string;
   from: string,
+  price: number;
   to: string,
   stops: string[]
   capacity: number;

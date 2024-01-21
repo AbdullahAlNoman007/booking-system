@@ -10,4 +10,5 @@ export default {
   salt_round: process.env.SALTROUND,
   token_secret: process.env.TOKEN_SECRET,
   site_link: process.env.SITE_LINK,
+  routes_id: process.env.ROUTES_ID
 };

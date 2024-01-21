@@ -5,6 +5,7 @@ import { authRouter } from '../Moduler/auth/auth.router';
 import { busRouter } from '../Moduler/Bus/bus.router';
 import { offeredJourneyRouter } from '../Moduler/offeredJourney/offeredJourney.router';
 import { bookingRouter } from '../Moduler/Booking/booking.router';
+import { routesRouter } from '../Moduler/routes/routes.router';
 
 const router = express.Router();
 const moduleRouters = [
@@ -31,6 +32,10 @@ const moduleRouters = [
   {
     path: '/booking',
     router: bookingRouter,
+  },
+  {
+    path: '/routes',
+    router: routesRouter,
   },
 ];
 moduleRouters.map((route) => router.use(route.path, route.router));

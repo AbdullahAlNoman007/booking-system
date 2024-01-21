@@ -56,6 +56,7 @@ const TofferedJourneyFindSchema = z.object({
     .object({
       from: z.string(),
       stops: z.array(z.string()),
+      price: z.number(),
       date: z.string().refine(
         (date) => {
           const regexPattern: RegExp =
