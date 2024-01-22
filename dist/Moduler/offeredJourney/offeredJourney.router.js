@@ -12,6 +12,7 @@ const auth_1 = __importDefault(require("../../middleware/auth"));
 const userRole_1 = require("../../utility/userRole");
 const router = express_1.default.Router();
 router.post('/create-offeredJourney', (0, auth_1.default)(userRole_1.userRole.admin, userRole_1.userRole.operator), (0, validationRequest_1.default)(offeredJourney_validation_1.offeredJourneyValidation.TofferedJourneyValidationSchema), offeredJourney_controller_1.offeredJourneyController.createOfferedJourney);
-router.get('/get-offeredJourney', (0, validationRequest_1.default)(offeredJourney_validation_1.offeredJourneyValidation.TofferedJourneyFindSchema), offeredJourney_controller_1.offeredJourneyController.getAllOfferedJourney);
+router.post('/get-offeredJourney', (0, validationRequest_1.default)(offeredJourney_validation_1.offeredJourneyValidation.TofferedJourneyFindSchema), offeredJourney_controller_1.offeredJourneyController.getAllOfferedJourney);
+router.get('/get-offeredJourneyByOperator', (0, auth_1.default)(userRole_1.userRole.operator), offeredJourney_controller_1.offeredJourneyController.getAllOfferedJourneyByOperator);
 router.delete('/delete-offeredJourney/:id', (0, auth_1.default)(userRole_1.userRole.admin, userRole_1.userRole.operator), offeredJourney_controller_1.offeredJourneyController.deleteOfferedJourney);
 exports.offeredJourneyRouter = router;

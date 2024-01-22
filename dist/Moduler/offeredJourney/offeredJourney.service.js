@@ -18,6 +18,9 @@ const AppError_1 = __importDefault(require("../../Error/AppError"));
 const member_model_1 = require("../Member/member.model");
 const bus_model_1 = __importDefault(require("../Bus/bus.model"));
 const offeredJourney_model_1 = require("./offeredJourney.model");
+const mongoose_1 = __importDefault(require("mongoose"));
+const routes_model_1 = require("../routes/routes.model");
+const config_1 = __importDefault(require("../../config"));
 const createOfferedJourneyIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { driver, bus, date } = payload;
     const isDriverExists = yield member_model_1.driverModel.findById(driver);
@@ -29,6 +32,7 @@ const createOfferedJourneyIntoDB = (payload) => __awaiter(void 0, void 0, void 0
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Bus is not found');
     }
     payload.capacity = isBusExists.capacity;
+    payload.category = isBusExists.category;
     payload.slot = isBusExists.slot;
     const isBusAndDateConflict = yield offeredJourney_model_1.offeredJourneyModel.findOne({ bus, date });
     if (isBusAndDateConflict) {
@@ -41,17 +45,38 @@ const createOfferedJourneyIntoDB = (payload) => __awaiter(void 0, void 0, void 0
     if (isDriverAndDateConflict) {
         throw new AppError_1.default(http_status_1.default.CONFLICT, 'This Driver has trip on this date');
     }
-    const result = yield offeredJourney_model_1.offeredJourneyModel.create(payload);
-    return result;
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction();
+        const presentroutes = yield routes_model_1.routesModel.findById(config_1.default.routes_id);
+        let routes = presentroutes === null || presentroutes === void 0 ? void 0 : presentroutes.routes;
+        routes = [...routes, payload.from, ...payload.stops];
+        const updateRoutes = [...new Set(routes)];
+        const update = yield routes_model_1.routesModel.findByIdAndUpdate(config_1.default.routes_id, { routes: updateRoutes }, { new: true, upsert: true, session });
+        if (!update) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Routes don't updates");
+        }
+        const result = yield offeredJourney_model_1.offeredJourneyModel.create([payload], { session });
+        if (!result) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Offered Journey's creation is failed");
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return result;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error(error);
+    }
 });
 const getAllOfferedJourneyFromDB = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    if (Object.keys(query).length !== 3) {
+    if (Object.keys(query).length < 3) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Provider your destination");
     }
-    const from = query.from;
+    const from = new RegExp(query === null || query === void 0 ? void 0 : query.from, 'i');
     const date = query.date;
-    const stops = query.stops;
-    console.log(stops);
+    const stops = query === null || query === void 0 ? void 0 : query.stops.map((stop) => new RegExp(stop, 'i'));
     const result = yield offeredJourney_model_1.offeredJourneyModel
         .find({
         from,
@@ -62,6 +87,19 @@ const getAllOfferedJourneyFromDB = (query) => __awaiter(void 0, void 0, void 0, 
         .populate({ path: 'bus', select: 'companyName no capacity -_id' });
     return result;
 });
+const getAllOfferedJourneyFromDBByOperator = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const seller = yield member_model_1.operatorModel.findOne({ id: payload.id }).select('route.from route.to -_id');
+    const routes = seller === null || seller === void 0 ? void 0 : seller.route;
+    let result = [];
+    if (routes) {
+        // Use Promise.all to wait for all async operations to complete
+        yield Promise.all(routes.map((route) => __awaiter(void 0, void 0, void 0, function* () {
+            const fetchValue = yield offeredJourney_model_1.offeredJourneyModel.find(route);
+            result = [...result, ...fetchValue];
+        })));
+    }
+    return (result);
+});
 const deleteOfferedJourneyFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield offeredJourney_model_1.offeredJourneyModel.findByIdAndDelete(id);
     return result;
@@ -70,4 +108,5 @@ exports.offeredJourneyService = {
     createOfferedJourneyIntoDB,
     getAllOfferedJourneyFromDB,
     deleteOfferedJourneyFromDB,
+    getAllOfferedJourneyFromDBByOperator
 };

@@ -6,6 +6,7 @@ const TbusValidationSchema = zod_1.z.object({
         companyName: zod_1.z.string(),
         no: zod_1.z.string(),
         capacity: zod_1.z.number(),
+        category: zod_1.z.enum(['AC', 'Non-AC']),
         slot: zod_1.z.array(zod_1.z.string().refine((seat) => {
             const regexPattern = /^[A-Z][1-5]$/;
             return regexPattern.test(seat);

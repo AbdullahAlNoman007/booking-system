@@ -42,6 +42,7 @@ const TofferedJourneyFindSchema = zod_1.z.object({
         .object({
         from: zod_1.z.string(),
         stops: zod_1.z.array(zod_1.z.string()),
+        price: zod_1.z.number(),
         date: zod_1.z.string().refine((date) => {
             const regexPattern = /^(?:20\d\d)-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$/;
             return regexPattern.test(date);

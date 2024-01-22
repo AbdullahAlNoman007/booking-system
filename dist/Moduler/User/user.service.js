@@ -53,12 +53,15 @@ const createOperatorIntoDB = (password, payload) => __awaiter(void 0, void 0, vo
     const user = {};
     user.password = password;
     user.email = payload.email;
+    user.contactNo = payload.contactNo;
     user.role = 'operator';
     const session = yield mongoose_1.default.startSession();
     try {
         session.startTransaction();
         user.id = (yield (0, user_utils_1.default)('operator'));
+        console.log(user);
         const newUser = yield user_model_1.UserModel.create([user], { session });
+        console.log(newUser);
         if (!newUser.length) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
         }
@@ -82,6 +85,7 @@ const createDriverIntoDB = (password, payload) => __awaiter(void 0, void 0, void
     const user = {};
     user.password = password;
     user.email = payload.email;
+    user.contactNo = payload.contactNo;
     user.role = 'driver';
     const session = yield mongoose_1.default.startSession();
     try {
@@ -111,6 +115,7 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
     const user = {};
     user.password = password;
     user.email = payload.email;
+    user.contactNo = payload.contactNo;
     user.role = 'admin';
     const session = yield mongoose_1.default.startSession();
     try {

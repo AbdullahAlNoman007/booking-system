@@ -13,6 +13,7 @@ const TofferedJourneySchema = new mongoose_1.Schema({
         required: true,
         ref: 'bus',
     },
+    category: { type: String, enum: ['AC', 'Non-AC'], required: true, default: "Non-AC" },
     date: {
         type: String,
         required: true,
@@ -26,6 +27,14 @@ const TofferedJourneySchema = new mongoose_1.Schema({
         required: true,
     },
     from: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    to: {
         type: String,
         required: true
     },

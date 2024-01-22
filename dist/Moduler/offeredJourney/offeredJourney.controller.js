@@ -44,8 +44,18 @@ const deleteOfferedJourney = (0, trycatch_1.default)((req, res) => __awaiter(voi
         data: result,
     });
 }));
+const getAllOfferedJourneyByOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield offeredJourney_service_1.offeredJourneyService.getAllOfferedJourneyFromDBByOperator(req.user);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Offered Journey is retrieved Successfully!',
+        data: result,
+    });
+}));
 exports.offeredJourneyController = {
     createOfferedJourney,
     getAllOfferedJourney,
     deleteOfferedJourney,
+    getAllOfferedJourneyByOperator
 };

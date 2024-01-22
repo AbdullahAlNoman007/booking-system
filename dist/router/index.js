@@ -10,6 +10,7 @@ const auth_router_1 = require("../Moduler/auth/auth.router");
 const bus_router_1 = require("../Moduler/Bus/bus.router");
 const offeredJourney_router_1 = require("../Moduler/offeredJourney/offeredJourney.router");
 const booking_router_1 = require("../Moduler/Booking/booking.router");
+const routes_router_1 = require("../Moduler/routes/routes.router");
 const router = express_1.default.Router();
 const moduleRouters = [
     {
@@ -35,6 +36,10 @@ const moduleRouters = [
     {
         path: '/booking',
         router: booking_router_1.bookingRouter,
+    },
+    {
+        path: '/routes',
+        router: routes_router_1.routesRouter,
     },
 ];
 moduleRouters.map((route) => router.use(route.path, route.router));
