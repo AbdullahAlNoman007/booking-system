@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../middleware/sendEmail';
-import { adminModel, customerModel, driverModel, operatorModel } from '../Member/member.model';
+import { adminModel, customerModel, driverModel, moderatorModel, operatorModel } from '../Member/member.model';
 
 const loginInDB = async (payload: Tlogin) => {
   const email: string = payload.email;
@@ -25,6 +25,9 @@ const loginInDB = async (payload: Tlogin) => {
   }
   else if (isUserExists?.role === 'driver') {
     userDetails = await driverModel.findOne({ email }).select('name contactNo -id')
+  }
+  else if (isUserExists?.role === 'moderator') {
+    userDetails = await moderatorModel.findOne({ email }).select('name contactNo -id')
   }
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exists");

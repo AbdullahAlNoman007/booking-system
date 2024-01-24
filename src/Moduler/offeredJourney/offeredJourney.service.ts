@@ -101,9 +101,7 @@ const getAllOfferedJourneyFromDBByOperator = async (payload: JwtPayload) => {
   const seller = await operatorModel.findOne({ id: payload.id }).select('route.from route.to -_id');
   const routes = seller?.route;
   let result: any = [];
-
   if (routes) {
-    // Use Promise.all to wait for all async operations to complete
     await Promise.all(
       routes.map(async (route) => {
         const fetchValue = await offeredJourneyModel.find(route);
@@ -111,9 +109,7 @@ const getAllOfferedJourneyFromDBByOperator = async (payload: JwtPayload) => {
       })
     );
   }
-
   return (result);
-
 }
 
 const deleteOfferedJourneyFromDB = async (id: string) => {

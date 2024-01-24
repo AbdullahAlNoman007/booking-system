@@ -6,7 +6,7 @@ import config from '../config';
 import { UserModel } from '../Moduler/User/user.model';
 
 const auth = (
-  ...requiredRoles: ('admin' | 'operator' | 'customer' | 'driver')[]
+  ...requiredRoles: ('admin' | 'operator' | 'customer' | 'driver' | 'moderator')[]
 ) => {
   return catchAsync(async (req, res, next) => {
     const token = req.headers.authorization;

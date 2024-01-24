@@ -25,10 +25,10 @@ router.post(
   userController.createDriver,
 );
 router.post(
-  '/create-admin',
-  auth(userRole.admin),
+  '/create-moderator',
+  auth(userRole.admin, userRole.moderator),
   validationRequest(MemberValidationSchema),
-  userController.createAdmin,
+  userController.createModerator,
 );
 
 export const userRouter = router;

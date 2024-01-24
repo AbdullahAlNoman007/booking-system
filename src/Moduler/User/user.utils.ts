@@ -2,10 +2,11 @@ import {
   adminModel,
   customerModel,
   driverModel,
+  moderatorModel,
   operatorModel,
 } from '../Member/member.model';
 
-type Tidentity = 'customer' | 'operator' | 'driver' | 'admin';
+type Tidentity = 'customer' | 'operator' | 'driver' | 'admin' | 'moderator';
 
 const generateId = async (identity: Tidentity) => {
   let realId: string = '';
@@ -25,6 +26,11 @@ const generateId = async (identity: Tidentity) => {
     const count = await adminModel.find({});
     const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
     realId = `A-${currentId}`;
+  }
+  else if (identity === 'moderator') {
+    const count = await moderatorModel.find({});
+    const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
+    realId = `M-${currentId}`;
   }
   return realId;
 };

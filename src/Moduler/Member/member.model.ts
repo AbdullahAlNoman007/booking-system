@@ -31,3 +31,4 @@ export const customerModel = model<Tmember>('customer', memberSchema);
 export const operatorModel = model<Toperator>('operator', operatorSchema);
 export const driverModel = model<Tmember>('driver', memberSchema);
 export const adminModel = model<Tmember>('admin', memberSchema);
+export const moderatorModel = model<Tmember>('moderator', memberSchema)

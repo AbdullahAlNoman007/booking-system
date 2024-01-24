@@ -9,6 +9,7 @@ import {
   adminModel,
   customerModel,
   driverModel,
+  moderatorModel,
   operatorModel,
 } from '../Member/member.model';
 
@@ -148,10 +149,44 @@ const createAdminIntoDB = async (password: string, payload: Tmember) => {
     throw new Error(error);
   }
 };
+const createModeratorIntoDB = async (password: string, payload: Tmember) => {
+  const user: Partial<Tuser> = {};
+  user.password = password;
+  user.email = payload.email;
+  user.contactNo = payload.contactNo;
+  user.role = 'moderator';
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    user.id = (await generateId('moderator')) as string;
+
+    const newUser = await UserModel.create([user], { session });
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
+
+    const newModerator = await moderatorModel.create([payload], { session });
+    if (!newModerator.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create moderator');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+    return newModerator;
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new Error(error);
+  }
+};
 
 export const userService = {
   createCustomerIntoDB,
   createDriverIntoDB,
   createOperatorIntoDB,
   createAdminIntoDB,
+  createModeratorIntoDB
 };

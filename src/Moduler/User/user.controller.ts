@@ -49,10 +49,22 @@ const createAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const createModerator = catchAsync(async (req, res) => {
+  const { password, user } = req.body;
+  const hashPassword = await bcrypt.hash(password, Number(config.salt_round));
+  const result = await userService.createModeratorIntoDB(hashPassword, user);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: 'Moderator created Successfully',
+    data: result,
+  });
+});
 
 export const userController = {
   createCustomer,
   createOperator,
   createDriver,
   createAdmin,
+  createModerator
 };
