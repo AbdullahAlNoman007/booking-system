@@ -16,6 +16,13 @@ router.get(
   memberController.getAOperator,
 );
 router.get('/get-operators', auth(userRole.admin), memberController.getAllOperator);
+router.get('/get-moderators', auth(userRole.admin), memberController.getAllModerator);
+router.get(
+  '/get-moderator',
+  auth(userRole.admin),
+  validationRequest(getValidationSchema),
+  memberController.getAModerator,
+);
 router.get(
   '/get-driver',
   auth(userRole.admin),
@@ -30,6 +37,12 @@ router.put(
   auth(userRole.admin),
   validationRequest(memberUpdateSchema),
   memberController.updateCustomer,
+);
+router.put(
+  '/update-moderator/:id',
+  auth(userRole.admin),
+  validationRequest(memberUpdateSchema),
+  memberController.updateModerator,
 );
 router.put(
   '/update-operator/:id',
@@ -53,6 +66,11 @@ router.delete(
   '/delete-customer/:id',
   auth(userRole.admin),
   memberController.deleteCustomer,
+);
+router.delete(
+  '/delete-moderator/:id',
+  auth(userRole.admin),
+  memberController.deleteModerator,
 );
 router.delete(
   '/delete-operator/:id',

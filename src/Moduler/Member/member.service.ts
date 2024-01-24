@@ -270,4 +270,5 @@ export const memberService = {
   getAllAdminFromDB,
   updateAdminIntoDB,
   deleteAdminInDB,
+  deleteModeratorInDB
 };

@@ -41,6 +41,15 @@ const getAllAdmin = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllModerator = catchAsync(async (req, res) => {
+  const result = await memberService.getAllModeratorFromDB();
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All Moderator Retrieved Successfully!',
+    data: result,
+  });
+});
 
 const getACustomer = catchAsync(async (req, res) => {
 
@@ -49,6 +58,16 @@ const getACustomer = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Customer Retrieved Successfully!',
+    data: result,
+  });
+});
+const getAModerator = catchAsync(async (req, res) => {
+
+  const result = await memberService.getAModeratorFromDB(req.body);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Moderator Retrieved Successfully!',
     data: result,
   });
 });
@@ -94,7 +113,16 @@ const updateCustomer = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
+const updateModerator = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await memberService.updateModeratorIntoDB(id, req.body);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Moderator updated Successfully!',
+    data: result,
+  });
+});
 const updateOperator = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await memberService.updateOperatorIntoDB(id, req.body);
@@ -136,6 +164,16 @@ const deleteCustomer = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteModerator = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await memberService.deleteModeratorInDB(id);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Moderator Deleted Successfully!',
+    data: result,
+  });
+});
 const deleteOperator = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await memberService.deleteOperatorInDB(id);
@@ -172,16 +210,20 @@ export const memberController = {
   getADriver,
   getAOperator,
   getAAdmin,
+  getAModerator,
   getAllCustomer,
   getAllDriver,
   getAllOperator,
   getAllAdmin,
+  getAllModerator,
   updateCustomer,
   updateOperator,
   updateDriver,
   updateAdmin,
+  updateModerator,
   deleteCustomer,
   deleteOperator,
   deleteDriver,
   deleteAdmin,
+  deleteModerator
 };
