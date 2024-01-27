@@ -63,9 +63,21 @@ const createAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
+const createModerator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { password, user } = req.body;
+    const hashPassword = yield bcrypt_1.default.hash(password, Number(config_1.default.salt_round));
+    const result = yield user_service_1.userService.createModeratorIntoDB(hashPassword, user);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.CREATED,
+        message: 'Moderator created Successfully',
+        data: result,
+    });
+}));
 exports.userController = {
     createCustomer,
     createOperator,
     createDriver,
     createAdmin,
+    createModerator
 };

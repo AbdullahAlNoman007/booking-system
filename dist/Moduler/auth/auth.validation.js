@@ -4,7 +4,7 @@ exports.authValidation = void 0;
 const zod_1 = require("zod");
 const logInvalidationSchema = zod_1.z.object({
     body: zod_1.z.object({
-        email: zod_1.z.string(),
+        query: zod_1.z.string(),
         password: zod_1.z.string(),
     }),
 });

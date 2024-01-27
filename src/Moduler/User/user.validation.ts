@@ -30,3 +30,16 @@ export const operatorValidationSchema = z.object({
     }),
   }),
 });
+export const moderatorValidationSchema = z.object({
+  body: z.object({
+    password: z.string(),
+    user: z.object({
+      name: z.string(),
+      companyName: z.string(),
+      gender: z.enum(gender),
+      email: z.string().email(),
+      contactNo: z.string(),
+      route: z.array(routeSchema),
+    }),
+  }),
+});

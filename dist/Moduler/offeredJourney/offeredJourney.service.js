@@ -92,7 +92,6 @@ const getAllOfferedJourneyFromDBByOperator = (payload) => __awaiter(void 0, void
     const routes = seller === null || seller === void 0 ? void 0 : seller.route;
     let result = [];
     if (routes) {
-        // Use Promise.all to wait for all async operations to complete
         yield Promise.all(routes.map((route) => __awaiter(void 0, void 0, void 0, function* () {
             const fetchValue = yield offeredJourney_model_1.offeredJourneyModel.find(route);
             result = [...result, ...fetchValue];

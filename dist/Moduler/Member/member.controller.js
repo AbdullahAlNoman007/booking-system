@@ -53,12 +53,30 @@ const getAllAdmin = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
+const getAllModerator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAllModeratorFromDB();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'All Moderator Retrieved Successfully!',
+        data: result,
+    });
+}));
 const getACustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield member_service_1.memberService.getACustomerFromDB(req.body);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
         message: 'Customer Retrieved Successfully!',
+        data: result,
+    });
+}));
+const getAModerator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAModeratorFromDB(req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Moderator Retrieved Successfully!',
         data: result,
     });
 }));
@@ -96,6 +114,16 @@ const updateCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, v
         success: true,
         statusCode: http_status_1.default.OK,
         message: 'Customer updated Successfully!',
+        data: result,
+    });
+}));
+const updateModerator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield member_service_1.memberService.updateModeratorIntoDB(id, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Moderator updated Successfully!',
         data: result,
     });
 }));
@@ -139,6 +167,16 @@ const deleteCustomer = (0, trycatch_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+const deleteModerator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield member_service_1.memberService.deleteModeratorInDB(id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Moderator Deleted Successfully!',
+        data: result,
+    });
+}));
 const deleteOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield member_service_1.memberService.deleteOperatorInDB(id);
@@ -174,16 +212,20 @@ exports.memberController = {
     getADriver,
     getAOperator,
     getAAdmin,
+    getAModerator,
     getAllCustomer,
     getAllDriver,
     getAllOperator,
     getAllAdmin,
+    getAllModerator,
     updateCustomer,
     updateOperator,
     updateDriver,
     updateAdmin,
+    updateModerator,
     deleteCustomer,
     deleteOperator,
     deleteDriver,
     deleteAdmin,
+    deleteModerator
 };

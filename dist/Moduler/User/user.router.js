@@ -14,5 +14,5 @@ const router = express_1.default.Router();
 router.post('/create-customer', (0, validationRequest_1.default)(user_validation_1.MemberValidationSchema), user_controller_1.userController.createCustomer);
 router.post('/create-operator', (0, auth_1.default)(userRole_1.userRole.admin), (0, validationRequest_1.default)(user_validation_1.operatorValidationSchema), user_controller_1.userController.createOperator);
 router.post('/create-driver', (0, auth_1.default)(userRole_1.userRole.admin), (0, validationRequest_1.default)(user_validation_1.MemberValidationSchema), user_controller_1.userController.createDriver);
-router.post('/create-admin', (0, auth_1.default)(userRole_1.userRole.admin), (0, validationRequest_1.default)(user_validation_1.MemberValidationSchema), user_controller_1.userController.createAdmin);
+router.post('/create-moderator', (0, auth_1.default)(userRole_1.userRole.admin, userRole_1.userRole.moderator), (0, validationRequest_1.default)(user_validation_1.moderatorValidationSchema), user_controller_1.userController.createModerator);
 exports.userRouter = router;

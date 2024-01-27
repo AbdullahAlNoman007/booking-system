@@ -23,20 +23,35 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const sendEmail_1 = require("../../middleware/sendEmail");
 const member_model_1 = require("../Member/member.model");
 const loginInDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const email = payload.email;
-    const isUserExists = yield user_model_1.UserModel.findOne({ email });
+    const query = payload.query;
+    let loginKey = {};
+    const isNumber = (0, auth_utils_1.isPhoneNumber)(query);
+    const isEmail = (0, auth_utils_1.isEmailAddress)(query);
+    if (isNumber && !isEmail) {
+        loginKey = { contactNo: query };
+    }
+    else if (isEmail && !isNumber) {
+        loginKey = { email: query };
+    }
+    if (Object.keys(loginKey).length === 0) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Give Valid Number or Email address");
+    }
+    const isUserExists = yield user_model_1.UserModel.findOne(loginKey);
     let userDetails = { name: '', contactNo: '' };
     if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'admin') {
-        userDetails = yield member_model_1.adminModel.findOne({ email }).select('name contactNo -_id');
+        userDetails = yield member_model_1.adminModel.findOne(loginKey).select('name contactNo -_id');
     }
     else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'customer') {
-        userDetails = yield member_model_1.customerModel.findOne({ email }).select('name contactNo -_id');
+        userDetails = yield member_model_1.customerModel.findOne(loginKey).select('name contactNo -_id');
     }
     else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'operator') {
-        userDetails = yield member_model_1.operatorModel.findOne({ email }).select('name contactNo -_id');
+        userDetails = yield member_model_1.operatorModel.findOne(loginKey).select('name contactNo -_id');
     }
     else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'driver') {
-        userDetails = yield member_model_1.driverModel.findOne({ email }).select('name contactNo -id');
+        userDetails = yield member_model_1.driverModel.findOne(loginKey).select('name contactNo -id');
+    }
+    else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'moderator') {
+        userDetails = yield member_model_1.moderatorModel.findOne(loginKey).select('name contactNo -id');
     }
     if (!isUserExists) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists");
@@ -54,7 +69,6 @@ const loginInDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isPasswordMatch) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Password doesn't Match");
     }
-    console.log(isUserExists);
     const user = Object.assign(Object.assign({}, jwtPayload), { contactNo: userDetails === null || userDetails === void 0 ? void 0 : userDetails.contactNo, name: userDetails === null || userDetails === void 0 ? void 0 : userDetails.name });
     const result = Object.assign(Object.assign({}, user), { token: token });
     return result;

@@ -1,7 +1,7 @@
 import express from 'express';
 import { userController } from './user.controller';
 import validationRequest from '../../middleware/validationRequest';
-import { MemberValidationSchema, operatorValidationSchema } from './user.validation';
+import { MemberValidationSchema, moderatorValidationSchema, operatorValidationSchema } from './user.validation';
 import auth from '../../middleware/auth';
 import { userRole } from '../../utility/userRole';
 
@@ -27,7 +27,7 @@ router.post(
 router.post(
   '/create-moderator',
   auth(userRole.admin, userRole.moderator),
-  validationRequest(MemberValidationSchema),
+  validationRequest(moderatorValidationSchema),
   userController.createModerator,
 );
 

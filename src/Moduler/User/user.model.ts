@@ -3,7 +3,7 @@ import { Tuser } from './user.interface';
 
 const userSchema = new Schema<Tuser>({
   id: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, unique: true },
   contactNo: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: {

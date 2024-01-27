@@ -141,9 +141,40 @@ const createAdminIntoDB = (password, payload) => __awaiter(void 0, void 0, void 
         throw new Error(error);
     }
 });
+const createModeratorIntoDB = (password, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = {};
+    user.password = password;
+    user.email = payload.email;
+    user.contactNo = payload.contactNo;
+    user.role = 'moderator';
+    const session = yield mongoose_1.default.startSession();
+    try {
+        session.startTransaction();
+        user.id = (yield (0, user_utils_1.default)('moderator'));
+        const newUser = yield user_model_1.UserModel.create([user], { session });
+        if (!newUser.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
+        }
+        payload.id = newUser[0].id;
+        payload.user = newUser[0]._id;
+        const newModerator = yield member_model_1.moderatorModel.create([payload], { session });
+        if (!newModerator.length) {
+            throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create moderator');
+        }
+        yield session.commitTransaction();
+        yield session.endSession();
+        return newModerator;
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw new Error(error);
+    }
+});
 exports.userService = {
     createCustomerIntoDB,
     createDriverIntoDB,
     createOperatorIntoDB,
     createAdminIntoDB,
+    createModeratorIntoDB
 };

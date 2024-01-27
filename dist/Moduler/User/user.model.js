@@ -4,7 +4,7 @@ exports.UserModel = void 0;
 const mongoose_1 = require("mongoose");
 const userSchema = new mongoose_1.Schema({
     id: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, unique: true },
     contactNo: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: {

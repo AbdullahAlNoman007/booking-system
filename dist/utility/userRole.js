@@ -6,4 +6,5 @@ exports.userRole = {
     operator: 'operator',
     driver: 'driver',
     customer: 'customer',
+    moderator: 'moderator'
 };

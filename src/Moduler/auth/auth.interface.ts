@@ -1,5 +1,5 @@
 export type Tlogin = {
-  email: string;
+  query: string;
   password: string;
 };
 

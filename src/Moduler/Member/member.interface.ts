@@ -10,7 +10,7 @@ export interface Tmember {
   name: string;
   user: Types.ObjectId;
   gender: 'male' | 'female' | 'others';
-  email: string;
+  email?: string;
   contactNo: string;
   bookedJourney?: Types.ObjectId[]
   isDeleted: boolean;
@@ -18,6 +18,16 @@ export interface Tmember {
 export interface Toperator {
   id: string;
   name: string;
+  user: Types.ObjectId;
+  gender: 'male' | 'female' | 'others';
+  email: string;
+  contactNo: string;
+  route: route[];
+}
+export interface Tmoderator {
+  id: string;
+  name: string;
+  companyName: string;
   user: Types.ObjectId;
   gender: 'male' | 'female' | 'others';
   email: string;

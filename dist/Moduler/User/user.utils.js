@@ -32,6 +32,11 @@ const generateId = (identity) => __awaiter(void 0, void 0, void 0, function* () 
         const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
         realId = `A-${currentId}`;
     }
+    else if (identity === 'moderator') {
+        const count = yield member_model_1.moderatorModel.find({});
+        const currentId = (Number(count.length) + 1).toString().padStart(4, '0');
+        realId = `M-${currentId}`;
+    }
     return realId;
 });
 exports.default = generateId;

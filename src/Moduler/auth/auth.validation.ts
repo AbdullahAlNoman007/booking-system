@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const logInvalidationSchema = z.object({
   body: z.object({
-    email: z.string(),
+    query: z.string(),
     password: z.string(),
   }),
 });

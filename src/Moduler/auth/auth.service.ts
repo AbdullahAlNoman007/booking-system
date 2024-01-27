@@ -2,39 +2,53 @@ import httpStatus from 'http-status';
 import AppError from '../../Error/AppError';
 import { UserModel } from '../User/user.model';
 import { TchangePassword, Tlogin } from './auth.interface';
-import { createToken } from './auth.utils';
+import { createToken, isEmailAddress, isPhoneNumber } from './auth.utils';
 import config from '../../config';
 import bcrypt from 'bcrypt';
-import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
 import { sendEmail } from '../../middleware/sendEmail';
 import { adminModel, customerModel, driverModel, moderatorModel, operatorModel } from '../Member/member.model';
 
 const loginInDB = async (payload: Tlogin) => {
-  const email: string = payload.email;
-  const isUserExists = await UserModel.findOne({ email });
+  const query: string = payload.query;
+  let loginKey: Object = {};
+  const isNumber = isPhoneNumber(query)
+  const isEmail = isEmailAddress(query)
+
+  if (isNumber && !isEmail) {
+    loginKey = { contactNo: query }
+  }
+  else if (isEmail && !isNumber) {
+    loginKey = { email: query }
+  }
+  if (Object.keys(loginKey).length === 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Give Valid Number or Email address")
+  }
+
+  const isUserExists = await UserModel.findOne(loginKey);
   let userDetails: { name: string, contactNo: string } = { name: '', contactNo: '' };
   if (isUserExists?.role === 'admin') {
-    userDetails = await adminModel.findOne({ email }).select('name contactNo -_id')
+    userDetails = await adminModel.findOne(loginKey).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'customer') {
-    userDetails = await customerModel.findOne({ email }).select('name contactNo -_id')
+    userDetails = await customerModel.findOne(loginKey).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'operator') {
-    userDetails = await operatorModel.findOne({ email }).select('name contactNo -_id')
+    userDetails = await operatorModel.findOne(loginKey).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'driver') {
-    userDetails = await driverModel.findOne({ email }).select('name contactNo -id')
+    userDetails = await driverModel.findOne(loginKey).select('name contactNo -id')
   }
   else if (isUserExists?.role === 'moderator') {
-    userDetails = await moderatorModel.findOne({ email }).select('name contactNo -id')
+    userDetails = await moderatorModel.findOne(loginKey).select('name contactNo -id')
   }
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exists");
   }
   const jwtPayload = {
     id: isUserExists?.id,
-    email: isUserExists?.email,
+    email: isUserExists?.email as string,
     role: isUserExists?.role,
   };
 
@@ -51,8 +65,6 @@ const loginInDB = async (payload: Tlogin) => {
   if (!isPasswordMatch) {
     throw new AppError(httpStatus.BAD_REQUEST, "Password doesn't Match");
   }
-  console.log(isUserExists);
-
 
   const user = { ...jwtPayload, contactNo: userDetails?.contactNo, name: userDetails?.name };
 
@@ -62,6 +74,7 @@ const loginInDB = async (payload: Tlogin) => {
   };
 
   return result;
+
 };
 
 const changePasswordInDB = async (
@@ -113,13 +126,13 @@ const forgetPasswordInDB = async (id: string) => {
   const jwtPayload = {
     id: isUserExists.id,
     role: isUserExists.role,
-    email: isUserExists.email,
+    email: isUserExists.email as string,
   };
   const token = createToken(jwtPayload, config.token_secret as string, '10m');
 
   const resetLink = `${config.site_link}?id=${isUserExists.id}&token=${token}`;
 
-  sendEmail(isUserExists.email, resetLink);
+  sendEmail(isUserExists.email as string, resetLink);
 
   return 'Reset link is send into your Email';
 };
