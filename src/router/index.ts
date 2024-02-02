@@ -6,6 +6,7 @@ import { busRouter } from '../Moduler/Bus/bus.router';
 import { offeredJourneyRouter } from '../Moduler/offeredJourney/offeredJourney.router';
 import { bookingRouter } from '../Moduler/Booking/booking.router';
 import { routesRouter } from '../Moduler/routes/routes.router';
+import { paymentRouter } from '../Moduler/Payment/payment.router';
 
 const router = express.Router();
 const moduleRouters = [
@@ -36,6 +37,10 @@ const moduleRouters = [
   {
     path: '/routes',
     router: routesRouter,
+  },
+  {
+    path: '/payment',
+    router: paymentRouter,
   },
 ];
 moduleRouters.map((route) => router.use(route.path, route.router));

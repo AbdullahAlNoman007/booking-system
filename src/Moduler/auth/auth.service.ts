@@ -27,6 +27,7 @@ const loginInDB = async (payload: Tlogin) => {
   }
 
   const isUserExists = await UserModel.findOne(loginKey);
+
   let userDetails: { name: string, contactNo: string } = { name: '', contactNo: '' };
   if (isUserExists?.role === 'admin') {
     userDetails = await adminModel.findOne(loginKey).select('name contactNo -_id')
@@ -38,14 +39,15 @@ const loginInDB = async (payload: Tlogin) => {
     userDetails = await operatorModel.findOne(loginKey).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'driver') {
-    userDetails = await driverModel.findOne(loginKey).select('name contactNo -id')
+    userDetails = await driverModel.findOne(loginKey).select('name contactNo -_id')
   }
   else if (isUserExists?.role === 'moderator') {
-    userDetails = await moderatorModel.findOne(loginKey).select('name contactNo -id')
+    userDetails = await moderatorModel.findOne(loginKey).select('name contactNo -_id')
   }
   if (!isUserExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "User doesn't exists");
   }
+
   const jwtPayload = {
     id: isUserExists?.id,
     email: isUserExists?.email as string,

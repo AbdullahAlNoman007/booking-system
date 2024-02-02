@@ -38,8 +38,7 @@ export const moderatorValidationSchema = z.object({
       companyName: z.string(),
       gender: z.enum(gender),
       email: z.string().email(),
-      contactNo: z.string(),
-      route: z.array(routeSchema),
+      contactNo: z.string()
     }),
   }),
 });

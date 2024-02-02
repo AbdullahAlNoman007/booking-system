@@ -11,11 +11,11 @@ router.get('/get-customer', auth(userRole.admin), validationRequest(getValidatio
 router.get('/get-customers', auth(userRole.admin), memberController.getAllCustomer);
 router.get(
   '/get-operator',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.moderator),
   validationRequest(getValidationSchema),
   memberController.getAOperator,
 );
-router.get('/get-operators', auth(userRole.admin), memberController.getAllOperator);
+router.get('/get-operators', auth(userRole.admin, userRole.moderator), memberController.getAllOperator);
 router.get('/get-moderators', auth(userRole.admin), memberController.getAllModerator);
 router.get(
   '/get-moderator',
@@ -46,7 +46,7 @@ router.put(
 );
 router.put(
   '/update-operator/:id',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.moderator),
   validationRequest(memberUpdateSchema),
   memberController.updateOperator,
 );
@@ -74,7 +74,7 @@ router.delete(
 );
 router.delete(
   '/delete-operator/:id',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.moderator),
   memberController.deleteOperator,
 );
 router.delete(

@@ -14,7 +14,7 @@ router.post(
 );
 router.post(
   '/create-operator',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.moderator),
   validationRequest(operatorValidationSchema),
   userController.createOperator,
 );
@@ -26,7 +26,7 @@ router.post(
 );
 router.post(
   '/create-moderator',
-  auth(userRole.admin, userRole.moderator),
+  auth(userRole.admin),
   validationRequest(moderatorValidationSchema),
   userController.createModerator,
 );

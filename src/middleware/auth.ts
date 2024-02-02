@@ -23,6 +23,8 @@ const auth = (
     ) as JwtPayload;
 
     const { role, id } = decoded;
+    console.log(decoded);
+
 
     const isUserExists = await UserModel.findOne({ id });
     if (!isUserExists) {
@@ -32,6 +34,7 @@ const auth = (
       throw new AppError(httpStatus.BAD_REQUEST, 'User is Blocked');
     }
 
+    console.log(requiredRoles, role)
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
