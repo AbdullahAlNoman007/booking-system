@@ -48,10 +48,10 @@ const loginInDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         userDetails = yield member_model_1.operatorModel.findOne(loginKey).select('name contactNo -_id');
     }
     else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'driver') {
-        userDetails = yield member_model_1.driverModel.findOne(loginKey).select('name contactNo -id');
+        userDetails = yield member_model_1.driverModel.findOne(loginKey).select('name contactNo -_id');
     }
     else if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.role) === 'moderator') {
-        userDetails = yield member_model_1.moderatorModel.findOne(loginKey).select('name contactNo -id');
+        userDetails = yield member_model_1.moderatorModel.findOne(loginKey).select('name contactNo -_id');
     }
     if (!isUserExists) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists");

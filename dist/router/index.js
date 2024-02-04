@@ -11,6 +11,7 @@ const bus_router_1 = require("../Moduler/Bus/bus.router");
 const offeredJourney_router_1 = require("../Moduler/offeredJourney/offeredJourney.router");
 const booking_router_1 = require("../Moduler/Booking/booking.router");
 const routes_router_1 = require("../Moduler/routes/routes.router");
+const payment_router_1 = require("../Moduler/Payment/payment.router");
 const router = express_1.default.Router();
 const moduleRouters = [
     {
@@ -40,6 +41,10 @@ const moduleRouters = [
     {
         path: '/routes',
         router: routes_router_1.routesRouter,
+    },
+    {
+        path: '/payment',
+        router: payment_router_1.paymentRouter,
     },
 ];
 moduleRouters.map((route) => router.use(route.path, route.router));
