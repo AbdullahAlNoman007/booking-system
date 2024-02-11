@@ -9,6 +9,7 @@ const TpaymentSchema = new mongoose_1.Schema({
     seat: { type: [String], required: true },
     price: { type: Number, required: true },
     transactionId: { type: String, required: true, unique: true },
+    url: { type: String, required: true, unique: true },
     isPaid: { type: Boolean, required: true, default: false },
 });
 const paymentModel = (0, mongoose_1.model)('payment', TpaymentSchema);

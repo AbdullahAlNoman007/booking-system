@@ -1,12 +1,17 @@
 import express from 'express'
 import validationRequest from '../../middleware/validationRequest'
-import TpaymentValidationSchema from './payment.validation'
+import { paymentValidationSchema } from './payment.validation'
 import { paymentController } from './payment.controller'
 
 const route = express.Router()
 
-route.post('/order', validationRequest(TpaymentValidationSchema), paymentController.makePayment)
-route.post('/success/:id', paymentController.paymentSuccess)
-route.post('/fail/:id', paymentController.paymentFail)
+route.post('/orderBySSL', validationRequest(paymentValidationSchema.TpaymentBkashValidationSchema), paymentController.makePayment)
+route.post('/successBySSL/:id', paymentController.paymentSuccess)
+route.post('/failBySSL/:id', paymentController.paymentFail)
+
+
+route.post('/orderBybKash', validationRequest(paymentValidationSchema.TpaymentBkashValidationSchema), paymentController.makePaymentBkash)
+route.get('/callbackbKash', paymentController.bKashPaymentCallback)
+
 
 export const paymentRouter = route

@@ -2,14 +2,85 @@ const SSLCommerzPayment = require('sslcommerz').SslCommerzPayment
 import config from '../../config';
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { Tpayment } from './payment.interface';
+import { TPaymentDetails, Tpayment } from './payment.interface';
 import AppError from '../../Error/AppError';
 import httpStatus from 'http-status';
 import paymentModel from './payment.model';
+import { paymentUtils } from './payment.utils';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
-const makePaymentInDB = async (res: Response, payload: Tpayment) => {
 
-    let URL;
+const makePaymentBkash = async (payload: Partial<Tpayment>) => {
+    const grantToken = await paymentUtils.grantToken()
+
+    const { data } = await axios.post(config.bkash_create_payment_url!, {
+        mode: '0011',
+        payerReference: " ",
+        callbackURL: 'http://localhost:5000/api/payment/callbackbKash',
+        amount: payload.price,
+        currency: "BDT",
+        intent: 'sale',
+        merchantInvoiceNumber: 'Inv' + uuidv4().substring(0, 5)
+    }, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            authorization: grantToken,
+            'x-app-key': config.bkash_api_key,
+        }
+    })
+    payload.url = data.bkashURL
+    payload.transactionId = data.paymentID
+    const input = await paymentModel.create(payload)
+
+    if (!input) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+    }
+
+    return data.bkashURL;
+
+}
+
+const bKashPaymentCallback = async (payload: any) => {
+    const grantToken = await paymentUtils.grantToken()
+    const { paymentID, status } = payload
+    console.log(payload);
+
+    if (status === 'cancel' || status === 'failure') {
+        throw new AppError(httpStatus.BAD_REQUEST, `Payment is ${status}`)
+    }
+    else if (status === 'success') {
+        try {
+            const { data } = await axios.post(config.bkash_execute_payment_url!, { paymentID }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    authorization: grantToken,
+                    'x-app-key': config.bkash_api_key,
+                }
+            })
+            if (data && data.statusCode === '0000' && data.statusMessage === 'Successful') {
+                const result = await paymentModel.findOneAndUpdate({ transactionId: paymentID }, { transactionId: data.trxID, isPaid: true }, { new: true, upsert: true })
+                if (!result) {
+                    throw new AppError(httpStatus.BAD_REQUEST, "Failed to payment")
+                }
+            }
+            else {
+                throw new AppError(httpStatus.BAD_REQUEST, data.statusMessage)
+            }
+        } catch (error: any) {
+            throw new AppError(httpStatus.BAD_REQUEST, error.message)
+        }
+    }
+    return "Payment is Successful"
+
+
+}
+
+const makePaymentInDB = async (res: Response, payload: Partial<Tpayment>) => {
+
+    let URL: string = '';
 
     try {
         const tran_id = new ObjectId().toString()
@@ -18,8 +89,8 @@ const makePaymentInDB = async (res: Response, payload: Tpayment) => {
             total_amount: payload.price,
             currency: 'BDT',
             tran_id: tran_id,
-            success_url: `${config.backend_site}/api/payment/success/${tran_id}`,
-            fail_url: `${config.backend_site}/api/payment/fail/${tran_id}`,
+            success_url: `${config.backend_site}/api/payment/successBySSL/${tran_id}`,
+            fail_url: `${config.backend_site}/api/paymentBySSL/fail/${tran_id}`,
             cancel_url: 'http://localhost:3030/cancel',
             ipn_url: 'http://localhost:3030/ipn',
             shipping_method: 'Courier',
@@ -58,7 +129,7 @@ const makePaymentInDB = async (res: Response, payload: Tpayment) => {
     } catch (error) {
         console.log(error);
     }
-
+    payload.url = URL;
     const input = await paymentModel.create(payload)
 
     if (!input) {
@@ -81,5 +152,7 @@ const paymentFail = async (id: string) => {
 export const paymentService = {
     makePaymentInDB,
     paymentSuccess,
-    paymentFail
+    paymentFail,
+    makePaymentBkash,
+    bKashPaymentCallback
 }

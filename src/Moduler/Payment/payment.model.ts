@@ -10,6 +10,7 @@ const TpaymentSchema = new Schema<Tpayment>({
     seat: { type: [String], required: true },
     price: { type: Number, required: true },
     transactionId: { type: String, required: true, unique: true },
+    url: { type: String, required: true, unique: true },
     isPaid: { type: Boolean, required: true, default: false },
 });
 

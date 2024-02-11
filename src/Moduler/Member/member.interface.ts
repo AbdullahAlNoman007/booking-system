@@ -31,8 +31,8 @@ export interface Tmoderator {
   user: Types.ObjectId;
   gender: 'male' | 'female' | 'others';
   email: string;
-
   contactNo: string;
+  route: route[];
 }
 
 export type Tget = {

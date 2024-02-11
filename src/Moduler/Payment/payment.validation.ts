@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const TpaymentValidationSchema = z.object({
+const TpaymentBkashValidationSchema = z.object({
     body: z.object({
         name: z.string(),
         email: z.string().email(),
@@ -11,4 +11,6 @@ const TpaymentValidationSchema = z.object({
     })
 })
 
-export default TpaymentValidationSchema;
+export const paymentValidationSchema = {
+    TpaymentBkashValidationSchema
+}

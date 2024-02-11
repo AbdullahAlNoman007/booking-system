@@ -44,8 +44,29 @@ const paymentFail = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void
         data: result
     });
 }));
+const makePaymentBkash = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield payment_service_1.paymentService.makePaymentBkash(req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Payment is processing',
+        data: result
+    });
+}));
+const bKashPaymentCallback = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.query;
+    const result = yield payment_service_1.paymentService.bKashPaymentCallback(query);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Payment is processing',
+        data: result
+    });
+}));
 exports.paymentController = {
     makePayment,
     paymentSuccess,
-    paymentFail
+    paymentFail,
+    makePaymentBkash,
+    bKashPaymentCallback
 };
