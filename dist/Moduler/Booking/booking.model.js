@@ -14,6 +14,8 @@ const TbookingSchema = new mongoose_1.Schema({
         type: [String],
         default: [],
     },
+    isPaid: { type: Boolean, default: false },
+    price: { type: Number, required: true }
 }, {
     timestamps: true,
 });

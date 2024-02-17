@@ -7,7 +7,7 @@ import { bookingModel } from './booking.model';
 import { customerModel } from '../Member/member.model';
 
 const createBookingIntoDB = async (payload: any, customer: JwtPayload) => {
-  const { journey, slot } = payload;
+  const { journey, slot, price } = payload;
 
   const isJourney = await offeredJourneyModel
     .findById(journey)
@@ -48,6 +48,7 @@ const createBookingIntoDB = async (payload: any, customer: JwtPayload) => {
     startTime: isJourney.startTime,
     journey,
     seatNo: slot,
+    price
   };
 
   const query = {

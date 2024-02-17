@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { Tbooking } from './booking.interface';
+import { number } from 'zod';
 
 const TbookingSchema = new Schema<Tbooking>(
   {
@@ -14,10 +15,13 @@ const TbookingSchema = new Schema<Tbooking>(
       type: [String],
       default: [],
     },
+    isPaid: { type: Boolean, default: false },
+    price: { type: Number, required: true }
   },
   {
     timestamps: true,
   },
 );
+
 
 export const bookingModel = model<Tbooking>('booking', TbookingSchema);

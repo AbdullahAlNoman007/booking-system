@@ -18,6 +18,7 @@ const TbookingValidationSchema = zod_1.z.object({
             }
             return true;
         }),
+        price: zod_1.z.number()
     }),
 });
 const TbookingOperatorValidationSchema = zod_1.z.object({
@@ -29,7 +30,8 @@ const TbookingOperatorValidationSchema = zod_1.z.object({
             return regexPattern.test(seat);
         }, {
             message: " You must give a validation string of Seat following this pattern 'A1 , A2, B3, H2' ",
-        }))
+        })),
+        price: zod_1.z.number()
     }),
 });
 const TbookingUpdateSchema = zod_1.z.object({

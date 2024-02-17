@@ -22,13 +22,15 @@ const payment_model_1 = __importDefault(require("./payment.model"));
 const payment_utils_1 = require("./payment.utils");
 const axios_1 = __importDefault(require("axios"));
 const uuid_1 = require("uuid");
+const booking_model_1 = require("../Booking/booking.model");
 const makePaymentBkash = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const bookingInfo = yield booking_model_1.bookingModel.findById(payload.booking);
     const grantToken = yield payment_utils_1.paymentUtils.grantToken();
     const { data } = yield axios_1.default.post(config_1.default.bkash_create_payment_url, {
         mode: '0011',
         payerReference: " ",
         callbackURL: 'http://localhost:5000/api/payment/callbackbKash',
-        amount: payload.price,
+        amount: bookingInfo.price,
         currency: "BDT",
         intent: 'sale',
         merchantInvoiceNumber: 'Inv' + (0, uuid_1.v4)().substring(0, 5)
@@ -40,6 +42,12 @@ const makePaymentBkash = (payload) => __awaiter(void 0, void 0, void 0, function
             'x-app-key': config_1.default.bkash_api_key,
         }
     });
+    payload.name = bookingInfo.userName;
+    payload.email = bookingInfo.userEmail;
+    payload.contactNo = bookingInfo.contactNo;
+    payload.seat = bookingInfo.seatNo;
+    payload.price = bookingInfo.price;
+    payload.journey = bookingInfo.journey;
     payload.url = data.bkashURL;
     payload.transactionId = data.paymentID;
     const input = yield payment_model_1.default.create(payload);
@@ -51,7 +59,6 @@ const makePaymentBkash = (payload) => __awaiter(void 0, void 0, void 0, function
 const bKashPaymentCallback = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const grantToken = yield payment_utils_1.paymentUtils.grantToken();
     const { paymentID, status } = payload;
-    console.log(payload);
     if (status === 'cancel' || status === 'failure') {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, `Payment is ${status}`);
     }
@@ -70,6 +77,10 @@ const bKashPaymentCallback = (payload) => __awaiter(void 0, void 0, void 0, func
                 if (!result) {
                     throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to payment");
                 }
+                const res1 = yield booking_model_1.bookingModel.findByIdAndUpdate(result.booking, { isPaid: true }, { new: true, upsert: true });
+                if (!res1) {
+                    throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Payment Process");
+                }
             }
             else {
                 throw new AppError_1.default(http_status_1.default.BAD_REQUEST, data.statusMessage);
@@ -83,11 +94,18 @@ const bKashPaymentCallback = (payload) => __awaiter(void 0, void 0, void 0, func
 });
 const makePaymentInDB = (res, payload) => __awaiter(void 0, void 0, void 0, function* () {
     let URL = '';
+    const bookingInfo = yield booking_model_1.bookingModel.findById(payload.booking);
+    payload.name = bookingInfo.userName;
+    payload.email = bookingInfo.userEmail;
+    payload.contactNo = bookingInfo.contactNo;
+    payload.seat = bookingInfo.seatNo;
+    payload.price = bookingInfo.price;
+    payload.journey = bookingInfo.journey;
     try {
         const tran_id = new mongodb_1.ObjectId().toString();
         payload.transactionId = tran_id;
         const data = {
-            total_amount: payload.price,
+            total_amount: bookingInfo.price,
             currency: 'BDT',
             tran_id: tran_id,
             success_url: `${config_1.default.backend_site}/api/payment/successBySSL/${tran_id}`,
@@ -118,9 +136,9 @@ const makePaymentInDB = (res, payload) => __awaiter(void 0, void 0, void 0, func
         };
         const sslcz = new SSLCommerzPayment(config_1.default.store_id, config_1.default.store_password, false);
         sslcz.init(data).then((apiResponse) => __awaiter(void 0, void 0, void 0, function* () {
-            let GatewayPageURL = apiResponse.GatewayPageURL;
+            let GatewayPageURL = yield apiResponse.GatewayPageURL;
             if (GatewayPageURL) {
-                URL = GatewayPageURL;
+                URL = yield GatewayPageURL;
             }
             else {
                 throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "SSL Session was not successful");
@@ -130,16 +148,26 @@ const makePaymentInDB = (res, payload) => __awaiter(void 0, void 0, void 0, func
     catch (error) {
         console.log(error);
     }
-    payload.url = URL;
     const input = yield payment_model_1.default.create(payload);
     if (!input) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Payment Process");
+    }
+    const updateInfo = yield payment_model_1.default.findByIdAndUpdate(input._id, { url: URL }, { new: true, upsert: true });
+    if (!updateInfo) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Payment Process");
     }
     return URL;
 });
 const paymentSuccess = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield payment_model_1.default.findOneAndUpdate({ transactionId: id }, { isPaid: true }, { new: true, upsert: true });
-    return result;
+    if (!result) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Payment Process");
+    }
+    const res1 = yield booking_model_1.bookingModel.findByIdAndUpdate(result.booking, { isPaid: true }, { new: true, upsert: true });
+    if (!res1) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Failed to Payment Process");
+    }
+    return null;
 });
 const paymentFail = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield payment_model_1.default.findOneAndDelete({ transactionId: id });

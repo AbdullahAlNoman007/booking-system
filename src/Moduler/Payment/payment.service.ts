@@ -2,23 +2,25 @@ const SSLCommerzPayment = require('sslcommerz').SslCommerzPayment
 import config from '../../config';
 import { Response } from 'express';
 import { ObjectId } from 'mongodb';
-import { TPaymentDetails, Tpayment } from './payment.interface';
+import { TPaymentDetails, Tbooking, Tpayment } from './payment.interface';
 import AppError from '../../Error/AppError';
 import httpStatus from 'http-status';
 import paymentModel from './payment.model';
 import { paymentUtils } from './payment.utils';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { bookingModel } from '../Booking/booking.model';
 
 
 const makePaymentBkash = async (payload: Partial<Tpayment>) => {
+    const bookingInfo = await bookingModel.findById(payload.booking) as Tbooking
     const grantToken = await paymentUtils.grantToken()
 
     const { data } = await axios.post(config.bkash_create_payment_url!, {
         mode: '0011',
         payerReference: " ",
         callbackURL: 'http://localhost:5000/api/payment/callbackbKash',
-        amount: payload.price,
+        amount: bookingInfo.price,
         currency: "BDT",
         intent: 'sale',
         merchantInvoiceNumber: 'Inv' + uuidv4().substring(0, 5)
@@ -30,6 +32,13 @@ const makePaymentBkash = async (payload: Partial<Tpayment>) => {
             'x-app-key': config.bkash_api_key,
         }
     })
+
+    payload.name = bookingInfo.userName;
+    payload.email = bookingInfo.userEmail;
+    payload.contactNo = bookingInfo.contactNo;
+    payload.seat = bookingInfo.seatNo;
+    payload.price = bookingInfo.price
+    payload.journey = bookingInfo.journey;
     payload.url = data.bkashURL
     payload.transactionId = data.paymentID
     const input = await paymentModel.create(payload)
@@ -45,7 +54,6 @@ const makePaymentBkash = async (payload: Partial<Tpayment>) => {
 const bKashPaymentCallback = async (payload: any) => {
     const grantToken = await paymentUtils.grantToken()
     const { paymentID, status } = payload
-    console.log(payload);
 
     if (status === 'cancel' || status === 'failure') {
         throw new AppError(httpStatus.BAD_REQUEST, `Payment is ${status}`)
@@ -65,6 +73,10 @@ const bKashPaymentCallback = async (payload: any) => {
                 if (!result) {
                     throw new AppError(httpStatus.BAD_REQUEST, "Failed to payment")
                 }
+                const res1 = await bookingModel.findByIdAndUpdate(result.booking, { isPaid: true }, { new: true, upsert: true })
+                if (!res1) {
+                    throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+                }
             }
             else {
                 throw new AppError(httpStatus.BAD_REQUEST, data.statusMessage)
@@ -81,12 +93,18 @@ const bKashPaymentCallback = async (payload: any) => {
 const makePaymentInDB = async (res: Response, payload: Partial<Tpayment>) => {
 
     let URL: string = '';
-
+    const bookingInfo = await bookingModel.findById(payload.booking) as Tbooking
+    payload.name = bookingInfo.userName;
+    payload.email = bookingInfo.userEmail;
+    payload.contactNo = bookingInfo.contactNo;
+    payload.seat = bookingInfo.seatNo;
+    payload.price = bookingInfo.price
+    payload.journey = bookingInfo.journey;
     try {
         const tran_id = new ObjectId().toString()
         payload.transactionId = tran_id
         const data = {
-            total_amount: payload.price,
+            total_amount: bookingInfo.price,
             currency: 'BDT',
             tran_id: tran_id,
             success_url: `${config.backend_site}/api/payment/successBySSL/${tran_id}`,
@@ -117,9 +135,9 @@ const makePaymentInDB = async (res: Response, payload: Partial<Tpayment>) => {
         };
         const sslcz = new SSLCommerzPayment(config.store_id, config.store_password, false)
         sslcz.init(data).then(async (apiResponse: any) => {
-            let GatewayPageURL = apiResponse.GatewayPageURL
+            let GatewayPageURL = await apiResponse.GatewayPageURL
             if (GatewayPageURL) {
-                URL = GatewayPageURL
+                URL = await GatewayPageURL
             }
             else {
                 throw new AppError(httpStatus.BAD_REQUEST, "SSL Session was not successful")
@@ -129,19 +147,29 @@ const makePaymentInDB = async (res: Response, payload: Partial<Tpayment>) => {
     } catch (error) {
         console.log(error);
     }
-    payload.url = URL;
-    const input = await paymentModel.create(payload)
 
+    const input = await paymentModel.create(payload)
     if (!input) {
         throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
     }
+    const updateInfo = await paymentModel.findByIdAndUpdate(input._id, { url: URL }, { new: true, upsert: true })
 
+    if (!updateInfo) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+    }
     return URL;
 }
 
 const paymentSuccess = async (id: string) => {
-    const result = await paymentModel.findOneAndUpdate({ transactionId: id }, { isPaid: true }, { new: true, upsert: true });
-    return result
+    const result = await paymentModel.findOneAndUpdate({ transactionId: id }, { isPaid: true }, { new: true, upsert: true }) as Tpayment;
+    if (!result) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+    }
+    const res1 = await bookingModel.findByIdAndUpdate(result.booking, { isPaid: true }, { new: true, upsert: true })
+    if (!res1) {
+        throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+    }
+    return null
 }
 
 const paymentFail = async (id: string) => {

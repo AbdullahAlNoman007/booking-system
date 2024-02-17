@@ -58,10 +58,8 @@ const createOperatorIntoDB = async (password: string, payload: Tmember) => {
   try {
     session.startTransaction();
     user.id = (await generateId('operator')) as string;
-    console.log(user);
 
     const newUser = await UserModel.create([user], { session });
-    console.log(newUser);
 
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');

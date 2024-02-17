@@ -26,7 +26,6 @@ const auth = (...requiredRoles) => {
         }
         const decoded = jsonwebtoken_1.default.verify(token, config_1.default.token_secret);
         const { role, id } = decoded;
-        console.log(decoded);
         const isUserExists = yield user_model_1.UserModel.findOne({ id });
         if (!isUserExists) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "User doesn't exists!");
@@ -34,7 +33,6 @@ const auth = (...requiredRoles) => {
         if ((isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.status) === 'blocked') {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'User is Blocked');
         }
-        console.log(requiredRoles, role);
         if (requiredRoles && !requiredRoles.includes(role)) {
             throw new AppError_1.default(http_status_1.default.UNAUTHORIZED, 'You do not have the necessary permissions to access this resource.You are not authorized!');
         }

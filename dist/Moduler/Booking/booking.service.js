@@ -20,7 +20,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const booking_model_1 = require("./booking.model");
 const member_model_1 = require("../Member/member.model");
 const createBookingIntoDB = (payload, customer) => __awaiter(void 0, void 0, void 0, function* () {
-    const { journey, slot } = payload;
+    const { journey, slot, price } = payload;
     const isJourney = yield offeredJourney_model_1.offeredJourneyModel
         .findById(journey)
         .select('capacity slot date startTime');
@@ -46,6 +46,7 @@ const createBookingIntoDB = (payload, customer) => __awaiter(void 0, void 0, voi
         startTime: isJourney.startTime,
         journey,
         seatNo: slot,
+        price
     };
     const query = {
         userId: user === null || user === void 0 ? void 0 : user.id,

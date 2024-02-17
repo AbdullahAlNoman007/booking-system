@@ -9,4 +9,6 @@ export interface Tbooking {
   journeyDate: string;
   startTime: string;
   seatNo: string[];
+  price: number;
+  isPaid: boolean;
 }

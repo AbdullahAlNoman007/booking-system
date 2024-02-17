@@ -5,7 +5,7 @@ import { paymentController } from './payment.controller'
 
 const route = express.Router()
 
-route.post('/orderBySSL', validationRequest(paymentValidationSchema.TpaymentBkashValidationSchema), paymentController.makePayment)
+route.post('/orderBySSL', validationRequest(paymentValidationSchema.TpaymentSSLValidationSchema), paymentController.makePayment)
 route.post('/successBySSL/:id', paymentController.paymentSuccess)
 route.post('/failBySSL/:id', paymentController.paymentFail)
 

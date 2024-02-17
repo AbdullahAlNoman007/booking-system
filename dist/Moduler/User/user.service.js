@@ -59,9 +59,7 @@ const createOperatorIntoDB = (password, payload) => __awaiter(void 0, void 0, vo
     try {
         session.startTransaction();
         user.id = (yield (0, user_utils_1.default)('operator'));
-        console.log(user);
         const newUser = yield user_model_1.UserModel.create([user], { session });
-        console.log(newUser);
         if (!newUser.length) {
             throw new AppError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
         }

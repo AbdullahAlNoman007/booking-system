@@ -22,6 +22,7 @@ const TbookingValidationSchema = z.object({
         }
         return true;
       }),
+    price: z.number()
   }),
 });
 const TbookingOperatorValidationSchema = z.object({
@@ -39,7 +40,8 @@ const TbookingOperatorValidationSchema = z.object({
               " You must give a validation string of Seat following this pattern 'A1 , A2, B3, H2' ",
           },
         ),
-      )
+      ),
+    price: z.number()
   }),
 });
 
