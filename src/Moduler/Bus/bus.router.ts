@@ -9,12 +9,12 @@ const router = express.Router();
 
 router.post(
   '/create-bus',
-  auth(userRole.admin),
+  auth(userRole.admin, userRole.moderator),
   validationRequest(TbusValidationSchema),
   busController.createBus,
 );
-router.get('/get-bus', auth(userRole.admin), busController.getAllBus);
-router.get('/get-bus/:id', auth(userRole.admin), busController.getBus);
-router.delete('/delete-bus/:id', auth(userRole.admin), busController.deleteBus);
+router.get('/get-bus', auth(userRole.admin, userRole.moderator), busController.getAllBus);
+router.get('/get-bus/:id', auth(userRole.admin, userRole.moderator), busController.getBus);
+router.delete('/delete-bus/:id', auth(userRole.admin, userRole.moderator), busController.deleteBus);
 
 export const busRouter = router;
