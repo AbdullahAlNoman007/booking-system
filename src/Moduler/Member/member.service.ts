@@ -10,6 +10,7 @@ import {
 } from './member.model';
 import mongoose from 'mongoose';
 import { UserModel } from '../User/user.model';
+import { JwtPayload } from 'jsonwebtoken';
 
 const getAllCustomerFromDB = async () => {
   const result = await customerModel.find({});
@@ -24,6 +25,12 @@ const getACustomerFromDB = async (query: Tget) => {
 };
 const getAllOperatorFromDB = async () => {
   const result = await operatorModel.find({});
+  return result;
+};
+const getAllOperatorByMFromDB = async (payload: JwtPayload) => {
+  const isModeratorExists = await moderatorModel.findOne({ id: payload.id })
+  const companyName = isModeratorExists?.companyName;
+  const result = await operatorModel.find({ companyName });
   return result;
 };
 const getAllModeratorFromDB = async () => {
@@ -79,6 +86,18 @@ const updateOperatorIntoDB = async (id: string, payload: Partial<Tmember>) => {
   const isExists = await operatorModel.findOne({ id });
   if (!isExists) {
     throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
+  }
+  const result = await operatorModel.findOneAndUpdate({ id }, payload);
+  return result;
+};
+const updateOperatorBymIntoDB = async (id: string, payload: Partial<Tmember>, auth: JwtPayload) => {
+  const isExists = await operatorModel.findOne({ id });
+  if (!isExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Operator doesn't Exists!");
+  }
+  const isModeratorExists = await moderatorModel.findOne({ id: payload.id })
+  if (isModeratorExists?.companyName !== isExists.companyName) {
+    throw new AppError(httpStatus.BAD_REQUEST, "You can't change other company operator");
   }
   const result = await operatorModel.findOneAndUpdate({ id }, payload);
   return result;
@@ -259,8 +278,10 @@ export const memberService = {
   getAllModeratorFromDB,
   getAllDriverFromDB,
   getAllOperatorFromDB,
+  getAllOperatorByMFromDB,
   updateCustomerIntoDB,
   updateOperatorIntoDB,
+  updateOperatorBymIntoDB,
   updateModeratorIntoDB,
   updateDriverIntoDB,
   deleteCustomerInDB,

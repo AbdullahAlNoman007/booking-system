@@ -177,10 +177,56 @@ const paymentFail = async (id: string) => {
     return result
 }
 
+const makePaymentNagad = async (payload: any) => {
+
+    // const bookingInfo = await bookingModel.findById(payload.booking) as Tbooking
+    const grantToken = await paymentUtils.grantToken()
+    // Your Nagad API credentials
+    const API_KEY = "MIIBIjANBc54jjMJoP2toR9fGmQV7y9fzj6TIz9SFfsTQOugHkhyRzzhvZisiKzOAAWNX8RMpG+iqQi4p9W9VrmmiCfFDmLFnMrwhncnMsvlXB8QSJCq2irrx3HG0SJJCbS5+atz+E1iqO8QaPJ05snxv82Mf4NlZ4gZK0Pq/VvJ20lSkR+0nk+s/v3BgIyle78wjZP1vWLU4wIDAQAB";
+    const API_SECRET = "MIIEvFAAxN1qfKiRiCL720FtrI7QL7fvQ==";
+
+    // Nagad API endpoint for creating payments
+    const NAGAD_API_URL = "https://sandbox.nagad.com.bd/ecommerce/checkout/v1/payment";
+
+    const { data } = await axios.post(NAGAD_API_URL, {
+        mode: '0011',
+        payerReference: " ",
+        callbackURL: 'http://localhost:5000/api/payment/callbackNagad',
+        amount: payload.amount,
+        currency: 1000,
+        intent: 'sale',
+        merchantInvoiceNumber: 'Inv' + uuidv4().substring(0, 5)
+    }, {
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            authorization: grantToken,
+            'x-app-key': API_KEY,
+        }
+    });
+    console.log(data);
+
+
+    // // Update the payload with Nagad-specific data
+    // payload.transactionId = data.paymentID;
+    // payload.url = data.bkashURL;
+
+    // // Save the payment details to your database
+    // const input = await paymentModel.create(payload);
+
+    // if (!input) {
+    //     throw new AppError(httpStatus.BAD_REQUEST, "Failed to Payment Process")
+    // }
+
+    // return data.bkashURL;
+}
+
+
 export const paymentService = {
     makePaymentInDB,
     paymentSuccess,
     paymentFail,
     makePaymentBkash,
-    bKashPaymentCallback
+    bKashPaymentCallback,
+    makePaymentNagad
 }

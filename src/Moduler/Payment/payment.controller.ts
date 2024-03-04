@@ -60,11 +60,22 @@ const bKashPaymentCallback = catchAsync(async (req, res) => {
     })
 })
 
+const makePaymentNagad = catchAsync(async (req, res) => {
+
+    const result = await paymentService.makePaymentNagad(req.body)
+    sendRespone(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Payment is processing',
+        data: result
+    })
+})
 
 export const paymentController = {
     makePayment,
     paymentSuccess,
     paymentFail,
     makePaymentBkash,
-    bKashPaymentCallback
+    bKashPaymentCallback,
+    makePaymentNagad
 }

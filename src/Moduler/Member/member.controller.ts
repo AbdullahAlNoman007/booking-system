@@ -22,6 +22,15 @@ const getAllOperator = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllOperatorByM = catchAsync(async (req, res) => {
+  const result = await memberService.getAllOperatorByMFromDB(req.user);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All Operators Retrieved Successfully!',
+    data: result,
+  });
+});
 
 const getAllDriver = catchAsync(async (req, res) => {
   const result = await memberService.getAllDriverFromDB();
@@ -133,6 +142,16 @@ const updateOperator = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const updateOperatorBym = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await memberService.updateOperatorBymIntoDB(id, req.body, req.user);
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Operator updated Successfully!',
+    data: result,
+  });
+});
 const updateDriver = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result = await memberService.updateDriverIntoDB(id, req.body);
@@ -218,6 +237,7 @@ export const memberController = {
   getAllModerator,
   updateCustomer,
   updateOperator,
+  updateOperatorBym,
   updateDriver,
   updateAdmin,
   updateModerator,
@@ -225,5 +245,6 @@ export const memberController = {
   deleteOperator,
   deleteDriver,
   deleteAdmin,
-  deleteModerator
+  deleteModerator,
+  getAllOperatorByM
 };

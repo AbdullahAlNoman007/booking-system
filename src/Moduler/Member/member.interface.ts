@@ -18,6 +18,7 @@ export interface Tmember {
 export interface Toperator {
   id: string;
   name: string;
+  companyName: string;
   user: Types.ObjectId;
   gender: 'male' | 'female' | 'others';
   email: string;

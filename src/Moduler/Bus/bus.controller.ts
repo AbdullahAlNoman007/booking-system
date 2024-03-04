@@ -14,8 +14,7 @@ const createBus = catchAsync(async (req, res) => {
   });
 });
 const getAllBus = catchAsync(async (req, res) => {
-  const result = await busService.getAllBus();
-
+  const result = await busService.getAllBus(req.user);
   sendRespone(res, {
     success: true,
     statusCode: httpStatus.OK,

@@ -23,6 +23,7 @@ export const operatorValidationSchema = z.object({
     password: z.string(),
     user: z.object({
       name: z.string(),
+      companyName: z.string(),
       gender: z.enum(gender),
       email: z.string().email(),
       contactNo: z.string(),

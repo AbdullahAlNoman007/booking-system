@@ -15,5 +15,6 @@ route.post('/failBySSL/:id', auth(userRole.customer, userRole.operator), payment
 route.post('/orderBybKash', auth(userRole.customer, userRole.operator), validationRequest(paymentValidationSchema.TpaymentBkashValidationSchema), paymentController.makePaymentBkash)
 route.get('/callbackbKash', auth(userRole.customer, userRole.operator), paymentController.bKashPaymentCallback)
 
+route.post('/orderBynagad', validationRequest(paymentValidationSchema.TpaymentBkashValidationSchema), paymentController.makePaymentNagad)
 
 export const paymentRouter = route
