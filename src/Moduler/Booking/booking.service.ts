@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 import mongoose, { ObjectId, Types } from 'mongoose';
 import { bookingModel } from './booking.model';
 import { customerModel } from '../Member/member.model';
+import { TgetBooking } from './booking.interface';
 
 const createBookingIntoDB = async (payload: any, customer: JwtPayload) => {
   const { journey, slot, price } = payload;
@@ -390,9 +391,22 @@ const getBookingFromDB = async (query: Record<string, unknown>) => {
   return queryBuilder;
 };
 
+const getSeatFromDB = async (payload: TgetBooking) => {
+
+  const offeredJourney = payload.offeredJourney;
+  const seatNo = payload.seatNo;
+
+  console.log(offeredJourney);
+  console.log(seatNo);
+
+  const result = await bookingModel.findOne({ journey: offeredJourney, seatNo: { $in: seatNo } });
+  return result;
+};
+
 export const bookingService = {
   createBookingIntoDB,
   updateBookingIntoDB,
   deleteBookingFromDB,
   getBookingFromDB,
+  getSeatFromDB
 };

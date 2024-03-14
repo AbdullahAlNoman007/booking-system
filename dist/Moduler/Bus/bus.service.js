@@ -14,11 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.busService = void 0;
 const bus_model_1 = __importDefault(require("./bus.model"));
+const member_model_1 = require("../Member/member.model");
 const createBusIntoDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield bus_model_1.default.create(payload);
     return result;
 });
-const getAllBus = () => __awaiter(void 0, void 0, void 0, function* () {
+const getAllBus = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    if (payload.role === 'moderator') {
+        const moderator = yield member_model_1.moderatorModel.findOne({ id: payload.id });
+        const companyName = moderator === null || moderator === void 0 ? void 0 : moderator.companyName;
+        const result = yield bus_model_1.default.find({ companyName });
+        return result;
+    }
     const result = yield bus_model_1.default.find({});
     return result;
 });

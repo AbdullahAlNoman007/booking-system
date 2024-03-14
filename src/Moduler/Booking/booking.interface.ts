@@ -12,3 +12,8 @@ export interface Tbooking {
   price: number;
   isPaid: boolean;
 }
+
+export interface TgetBooking {
+  offeredJourney: string,
+  seatNo: string[]
+}

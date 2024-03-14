@@ -51,10 +51,21 @@ const getBooking = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSeat = catchAsync(async (req, res) => {
+  const result = await bookingService.getSeatFromDB(req.body);
+
+  sendRespone(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: 'Seats data is retrieved successfully!!!',
+    data: result,
+  });
+});
 
 export const bookingController = {
   createBooking,
   updateBooking,
   deleteBooking,
   getBooking,
+  getSeat
 };

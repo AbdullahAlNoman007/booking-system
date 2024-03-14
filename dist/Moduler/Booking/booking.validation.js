@@ -64,8 +64,15 @@ const TbookingUpdateSchema = zod_1.z.object({
         }),
     }),
 });
+const TbookingGetSchema = zod_1.z.object({
+    body: zod_1.z.object({
+        offeredJourney: zod_1.z.string(),
+        seatNo: zod_1.z.array(zod_1.z.string())
+    }),
+});
 exports.bookingValidation = {
     TbookingValidationSchema,
     TbookingUpdateSchema,
-    TbookingOperatorValidationSchema
+    TbookingOperatorValidationSchema,
+    TbookingGetSchema
 };

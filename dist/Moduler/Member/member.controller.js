@@ -35,6 +35,15 @@ const getAllOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+const getAllOperatorByM = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield member_service_1.memberService.getAllOperatorByMFromDB(req.user);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'All Operators Retrieved Successfully!',
+        data: result,
+    });
+}));
 const getAllDriver = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield member_service_1.memberService.getAllDriverFromDB();
     (0, sendResponse_1.default)(res, {
@@ -137,6 +146,16 @@ const updateOperator = (0, trycatch_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
+const updateOperatorBym = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield member_service_1.memberService.updateOperatorBymIntoDB(id, req.body, req.user);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Operator updated Successfully!',
+        data: result,
+    });
+}));
 const updateDriver = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const result = yield member_service_1.memberService.updateDriverIntoDB(id, req.body);
@@ -220,6 +239,7 @@ exports.memberController = {
     getAllModerator,
     updateCustomer,
     updateOperator,
+    updateOperatorBym,
     updateDriver,
     updateAdmin,
     updateModerator,
@@ -227,5 +247,6 @@ exports.memberController = {
     deleteOperator,
     deleteDriver,
     deleteAdmin,
-    deleteModerator
+    deleteModerator,
+    getAllOperatorByM
 };

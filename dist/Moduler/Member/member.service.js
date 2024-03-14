@@ -33,6 +33,12 @@ const getAllOperatorFromDB = () => __awaiter(void 0, void 0, void 0, function* (
     const result = yield member_model_1.operatorModel.find({});
     return result;
 });
+const getAllOperatorByMFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isModeratorExists = yield member_model_1.moderatorModel.findOne({ id: payload.id });
+    const companyName = isModeratorExists === null || isModeratorExists === void 0 ? void 0 : isModeratorExists.companyName;
+    const result = yield member_model_1.operatorModel.find({ companyName });
+    return result;
+});
 const getAllModeratorFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield member_model_1.moderatorModel.find({});
     return result;
@@ -85,6 +91,18 @@ const updateOperatorIntoDB = (id, payload) => __awaiter(void 0, void 0, void 0, 
     const isExists = yield member_model_1.operatorModel.findOne({ id });
     if (!isExists) {
         throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Operator doesn't Exists!");
+    }
+    const result = yield member_model_1.operatorModel.findOneAndUpdate({ id }, payload);
+    return result;
+});
+const updateOperatorBymIntoDB = (id, payload, auth) => __awaiter(void 0, void 0, void 0, function* () {
+    const isExists = yield member_model_1.operatorModel.findOne({ id });
+    if (!isExists) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "Operator doesn't Exists!");
+    }
+    const isModeratorExists = yield member_model_1.moderatorModel.findOne({ id: payload.id });
+    if ((isModeratorExists === null || isModeratorExists === void 0 ? void 0 : isModeratorExists.companyName) !== isExists.companyName) {
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, "You can't change other company operator");
     }
     const result = yield member_model_1.operatorModel.findOneAndUpdate({ id }, payload);
     return result;
@@ -252,8 +270,10 @@ exports.memberService = {
     getAllModeratorFromDB,
     getAllDriverFromDB,
     getAllOperatorFromDB,
+    getAllOperatorByMFromDB,
     updateCustomerIntoDB,
     updateOperatorIntoDB,
+    updateOperatorBymIntoDB,
     updateModeratorIntoDB,
     updateDriverIntoDB,
     deleteCustomerInDB,

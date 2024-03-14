@@ -53,9 +53,19 @@ const getBooking = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 
         data: result,
     });
 }));
+const getSeat = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield booking_service_1.bookingService.getSeatFromDB(req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.CREATED,
+        message: 'Seats data is retrieved successfully!!!',
+        data: result,
+    });
+}));
 exports.bookingController = {
     createBooking,
     updateBooking,
     deleteBooking,
     getBooking,
+    getSeat
 };

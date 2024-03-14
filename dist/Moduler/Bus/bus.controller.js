@@ -27,7 +27,7 @@ const createBus = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0
     });
 }));
 const getAllBus = (0, trycatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield bus_service_1.busService.getAllBus();
+    const result = yield bus_service_1.busService.getAllBus(req.user);
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_1.default.OK,

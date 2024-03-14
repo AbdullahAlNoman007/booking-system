@@ -16,4 +16,5 @@ route.post('/successBySSL/:id', (0, auth_1.default)(userRole_1.userRole.customer
 route.post('/failBySSL/:id', (0, auth_1.default)(userRole_1.userRole.customer, userRole_1.userRole.operator), payment_controller_1.paymentController.paymentFail);
 route.post('/orderBybKash', (0, auth_1.default)(userRole_1.userRole.customer, userRole_1.userRole.operator), (0, validationRequest_1.default)(payment_validation_1.paymentValidationSchema.TpaymentBkashValidationSchema), payment_controller_1.paymentController.makePaymentBkash);
 route.get('/callbackbKash', (0, auth_1.default)(userRole_1.userRole.customer, userRole_1.userRole.operator), payment_controller_1.paymentController.bKashPaymentCallback);
+route.post('/orderBynagad', (0, validationRequest_1.default)(payment_validation_1.paymentValidationSchema.TpaymentBkashValidationSchema), payment_controller_1.paymentController.makePaymentNagad);
 exports.paymentRouter = route;

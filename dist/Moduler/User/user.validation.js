@@ -23,6 +23,7 @@ exports.operatorValidationSchema = zod_1.z.object({
         password: zod_1.z.string(),
         user: zod_1.z.object({
             name: zod_1.z.string(),
+            companyName: zod_1.z.string(),
             gender: zod_1.z.enum(gender),
             email: zod_1.z.string().email(),
             contactNo: zod_1.z.string(),

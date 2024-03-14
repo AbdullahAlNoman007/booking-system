@@ -35,4 +35,6 @@ router.delete(
 
 router.get('/get-booking', auth(userRole.admin), bookingController.getBooking);
 
+router.get('/get-seats', validationRequest(bookingValidation.TbookingGetSchema), bookingController.getSeat);
+
 export const bookingRouter = router;

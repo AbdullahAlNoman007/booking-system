@@ -87,9 +87,16 @@ const TbookingUpdateSchema = z.object({
       }),
   }),
 });
+const TbookingGetSchema = z.object({
+  body: z.object({
+    offeredJourney: z.string(),
+    seatNo: z.array(z.string())
+  }),
+});
 
 export const bookingValidation = {
   TbookingValidationSchema,
   TbookingUpdateSchema,
-  TbookingOperatorValidationSchema
+  TbookingOperatorValidationSchema,
+  TbookingGetSchema
 };

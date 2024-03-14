@@ -16,4 +16,5 @@ router.post('/create-bookingByoperator', (0, auth_1.default)(userRole_1.userRole
 router.put('/update-booking/:id', (0, auth_1.default)(userRole_1.userRole.customer), (0, validationRequest_1.default)(booking_validation_1.bookingValidation.TbookingUpdateSchema), booking_controller_1.bookingController.updateBooking);
 router.delete('/delete-booking/:id', (0, auth_1.default)(userRole_1.userRole.customer), booking_controller_1.bookingController.deleteBooking);
 router.get('/get-booking', (0, auth_1.default)(userRole_1.userRole.admin), booking_controller_1.bookingController.getBooking);
+router.get('/get-seats', (0, validationRequest_1.default)(booking_validation_1.bookingValidation.TbookingGetSchema), booking_controller_1.bookingController.getSeat);
 exports.bookingRouter = router;
