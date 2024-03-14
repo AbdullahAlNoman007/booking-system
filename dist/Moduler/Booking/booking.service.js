@@ -249,8 +249,6 @@ const getBookingFromDB = (query) => __awaiter(void 0, void 0, void 0, function* 
 const getSeatFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const offeredJourney = payload.offeredJourney;
     const seatNo = payload.seatNo;
-    console.log(offeredJourney);
-    console.log(seatNo);
     const result = yield booking_model_1.bookingModel.findOne({ journey: offeredJourney, seatNo: { $in: seatNo } });
     return result;
 });

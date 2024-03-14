@@ -396,9 +396,6 @@ const getSeatFromDB = async (payload: TgetBooking) => {
   const offeredJourney = payload.offeredJourney;
   const seatNo = payload.seatNo;
 
-  console.log(offeredJourney);
-  console.log(seatNo);
-
   const result = await bookingModel.findOne({ journey: offeredJourney, seatNo: { $in: seatNo } });
   return result;
 };
